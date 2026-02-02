@@ -9,22 +9,59 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+datos <- read.csv("dataset/movies_2026.csv")
 ```
 
-## Including Plots
+1. ¿Cuáles son las 10 películas que contaron con más presupuesto?
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+top_bud <- datos[order(datos$budget, decreasing = TRUE), ][1:10, ]
+top_bud$originalTitle
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+2. ¿Cuáles son las 10 películas que más ingresos tuvieron?
+
+```{r}
+top_rev <- datos[order(datos$revenue, decreasing = TRUE), ][1:10, ]
+top_rev$originalTitle
+```
+
+3. ¿Cuál es la película que más votos tuvo?
+
+```{r}
+datos$title[which.max(datos$voteCount)]
+```
+
+4. ¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?
+
+```{r}
+datos$title[which.min(datos$voteAvg)]
+```
+
+5. ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
+
+6. ¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico.
+    1. ¿A qué género principal pertenecen las películas más largas?
+
+7. ¿Las películas de qué genero principal obtuvieron mayores ganancias?
+
+8. ¿La cantidad de actores influye en los ingresos de las películas? ¿se han hecho películas con más actores en los últimos años?
+
+9. ¿Es posible que la cantidad de hombres y mujeres en el reparto influya en la popularidad y los ingresos de las películas?
+
+10. ¿Quiénes son los directores que hicieron las 20 películas mejor calificadas?
+
+11. ¿Cómo se correlacionan los presupuestos con los ingresos? ¿Los altos presupuestos significan altos ingresos? Haga los gráficos que necesite, histograma, diagrama de dispersión
+
+12. ¿Se asocian ciertos meses de lanzamiento con mejores ingresos?
+
+13. ¿En qué meses se han visto los lanzamientos con mejores ingresos?¿cuantas películas, en promedio, se han lanzado por mes?
+
+14. ¿Cómo se correlacionan las calificaciones con el éxito comercial?
+
+15. ¿La popularidad del elenco está directamente correlacionada con el éxito de taquilla?
+
+16. ¿Qué estrategias de marketing, como videos promocionales o páginas oficiales, generan mejores resultados?
+
