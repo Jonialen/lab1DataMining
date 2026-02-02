@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
 ```
 
 ```{r}
@@ -31,13 +32,17 @@ top_rev$originalTitle
 3. ¿Cuál es la película que más votos tuvo?
 
 ```{r}
-datos$title[which.max(datos$voteCount)]
+datos %>%
+  filter(voteCount == max(voteCount, na.rm = TRUE)) %>%
+  select(title, voteCount)
 ```
 
 4. ¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?
 
 ```{r}
-datos$title[which.min(datos$voteAvg)]
+datos %>%
+  filter(voteAvg == min(voteAvg, na.rm = TRUE)) %>%
+  select(title, voteAvg)
 ```
 
 5. ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
