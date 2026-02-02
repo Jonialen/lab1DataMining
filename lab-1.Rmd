@@ -10,6 +10,102 @@ knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 ```
 
+```{r Clasificación}
+clasificacion_variables <- data.frame(
+  Variable = c(
+    "id",
+    "budget",
+    "genres",
+    "homePage",
+    "productionCompany",
+    "productionCompanyCountry",
+    "productionCountry",
+    "revenue",
+    "runtime",
+    "video",
+    "director",
+    "actors",
+    "actorsPopularity",
+    "actorsCharacter",
+    "originalTitle",
+    "title",
+    "originalLanguage",
+    "popularity",
+    "releaseDate",
+    "voteAvg",
+    "voteCount",
+    "genresAmount",
+    "productionCoAmount",
+    "productionCountriesAmount",
+    "actorsAmount",
+    "castWomenAmount",
+    "castMenAmount",
+    "releaseYear"
+  ),
+  Tipo = c(
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cualitativa",
+    "Cualitativa",
+    "Cualitativa",
+    "Cualitativa",
+    "Cualitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cualitativa",
+    "Cualitativa",
+    "Cualitativa",
+    "Cuantitativa",
+    "Cualitativa",
+    "Cualitativa",
+    "Cualitativa",
+    "Cualitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa"
+  ),
+  Subtipo = c(
+    "Discreta",   
+    "Continua",   
+    "Nominal",    
+    "Nominal",    
+    "Nominal",    
+    "Nominal",    
+    "Nominal",    
+    "Continua",   
+    "Continua",   
+    "Nominal",    
+    "Nominal",    
+    "Nominal",    
+    "Continua",   
+    "Nominal",    
+    "Nominal",    
+    "Nominal",    
+    "Nominal",    
+    "Continua",   
+    "Discreta",   
+    "Continua",   
+    "Discreta",   
+    "Discreta",   
+    "Discreta",   
+    "Discreta",   
+    "Discreta",   
+    "Discreta",   
+    "Discreta",   
+    "Discreta"    
+  )
+)
+clasificacion_variables
+```
+
 ```{r}
 datos <- read.csv("dataset/movies_2026.csv")
 ```
