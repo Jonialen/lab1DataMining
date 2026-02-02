@@ -10,6 +10,12 @@ knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 ```
 
+```{r}
+datos <- read.csv("dataset/movies_2026.csv")
+```
+
+Clasificación
+
 ```{r Clasificación}
 clasificacion_variables <- data.frame(
   Variable = c(
@@ -106,9 +112,28 @@ clasificacion_variables <- data.frame(
 clasificacion_variables
 ```
 
-```{r}
-datos <- read.csv("dataset/movies_2026.csv")
+Histogramas
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.show='hold', fig.width=4, fig.height=3}
+# Función escrita por chatgpt para hacer un boxplot de todas las variables cuantitativas.
+num_cols2 <- sapply(datos, is.numeric)
+
+lapply(names(datos)[num_cols2], function(col) {
+  hist(
+    datos[[col]],
+    main = paste("Histograma de", col)
+  )
+})
 ```
+
+A partir de los histogramas se observa que todas las variables presentan asimetría y colas largas, lo cual sugiere que las variables no obedecen una distribución normal.
+
+```{r}
+ks_results <- lapply(datos[num_cols2], function(x) ks.test(x, "pnorm", mean(x), sd(x)))
+ks_results
+```
+
+Segun las pruebas de ks, ninguna de las variables cuantitativas son normales.
 
 1. ¿Cuáles son las 10 películas que contaron con más presupuesto?
 
@@ -137,8 +162,9 @@ datos %>%
 
 ```{r}
 datos %>%
-  filter(voteAvg == min(voteAvg, na.rm = TRUE)) %>%
-  select(title, voteAvg)
+  filter(voteAvg > 0) %>%
+  filter(voteAvg == min(voteAvg)) %>%
+  select(title,voteAvg)
 ```
 
 5. ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
