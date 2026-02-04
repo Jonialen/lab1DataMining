@@ -8,113 +8,20 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
-```
-### 1. Exploración Inicial (3 pts)
-Realice un resumen del conjunto de datos para una exploración rápida.
-
-```{r}
-
+library(nortest)
+library(ggplot2)
 ```
 
-
-```{r}
+```{r datos}
 datos <- read.csv("dataset/movies_2026.csv")
 ```
 
-Clasificación
+### 1. Exploración Inicial
 
-```{r Clasificación}
+#### Clasificación de las variables
+
+```{r Clasificación, echo=FALSE}
 clasificacion_variables <- data.frame(
-    Variable = c(
-        "id",
-        "budget",
-        "genres",
-        "homePage",
-        "productionCompany",
-        "productionCompanyCountry",
-        "productionCountry",
-        "revenue",
-        "runtime",
-        "video",
-        "director",
-        "actors",
-        "actorsPopularity",
-        "actorsCharacter",
-        "originalTitle",
-        "title",
-        "originalLanguage",
-        "popularity",
-        "releaseDate",
-        "voteAvg",
-        "voteCount",
-        "genresAmount",
-        "productionCoAmount",
-        "productionCountriesAmount",
-        "actorsAmount",
-        "castWomenAmount",
-        "castMenAmount",
-        "releaseYear"
-    ),
-    Tipo = c(
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cualitativa",
-        "Cualitativa",
-        "Cualitativa",
-        "Cualitativa",
-        "Cualitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cualitativa",
-        "Cualitativa",
-        "Cualitativa",
-        "Cuantitativa",
-        "Cualitativa",
-        "Cualitativa",
-        "Cualitativa",
-        "Cualitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cuantitativa",
-        "Cuantitativa"
-    ),
-    Subtipo = c(
-        "Discreta",
-        "Continua",
-        "Nominal",
-        "Nominal",
-        "Nominal",
-        "Nominal",
-        "Nominal",
-        "Continua",
-        "Continua",
-        "Nominal",
-        "Nominal",
-        "Nominal",
-        "Continua",
-        "Nominal",
-        "Nominal",
-        "Nominal",
-        "Nominal",
-        "Continua",
-        "Discreta",
-        "Continua",
-        "Discreta",
-        "Discreta",
-        "Discreta",
-        "Discreta",
-        "Discreta",
-        "Discreta",
-        "Discreta",
-        "Discreta"
-    )
     Variable = c(
         "id",
         "budget",
@@ -209,33 +116,7 @@ clasificacion_variables <- data.frame(
 clasificacion_variables
 ```
 
-Histogramas
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.show='hold', fig.width=4, fig.height=3}
-# Función escrita por chatgpt para hacer un boxplot de todas las variables cuantitativas.
-num_cols2 <- sapply(datos, is.numeric)
-
-lapply(names(datos)[num_cols2], function(col) {
-  hist(
-    datos[[col]],
-    main = paste("Histograma de", col)
-  )
-})
-```
-
-<<<<<<< Updated upstream
-A partir de los histogramas se observa que todas las variables presentan asimetría y colas largas, lo cual sugiere que las variables no obedecen una distribución normal.
-
-```{r}
-ks_results <- lapply(datos[num_cols2], function(x) ks.test(x, "pnorm", mean(x), sd(x)))
-ks_results
-```
-
-Segun las pruebas de ks, ninguna de las variables cuantitativas son normales.
-=======
-### 1. Exploración Inicial
-
-```{r}
+```{r Resumen}
 # Resumen general del conjunto de datos
 summary(datos)
 
@@ -252,13 +133,15 @@ head(datos)
 colSums(is.na(datos))
 ```
 
+### 2. NO SE QUE ES EL 2 ERICK BLOQUEO EL LAB
+
 ### 3. Análisis Estadístico
 
 #### 3.1 Distribución Normal en Variables Cuantitativas
 
-Investigaremos si las variables cuantitativas principales siguen una distribución normal utilizando la prueba de Shapiro-Wilk (para una muestra, aunque el dataset es grande) y visualizaciones (Histogramas y Q-Q Plots). Debido al gran tamaño del dataset (19,883 filas), la prueba de Shapiro-Wilk suele ser muy sensible, por lo que nos apoyaremos más en histogramas y la prueba de Kolmogorov-Smirnov.
+Investigaremos si las variables cuantitativas principales siguen una distribución normal utilizando la prueba de Shapiro-Wilk (para una muestra, aunque el dataset es grande) y visualizaciones (Histogramas y Q-Q Plots). Debido al gran tamaño del dataset (19,883 filas), la prueba de Shapiro-Wilk suele ser muy sensible, por lo que nos apoyaremos más en histogramas y la prueba de Lilliefors.
 
-```{r}
+```{r Histogramas de cuantitativas}
 # Selección de variables cuantitativas
 cuantitativas <- datos[, c("budget", "revenue", "runtime", "popularity", "voteAvg", "voteCount")]
 
@@ -268,19 +151,20 @@ for (col in colnames(cuantitativas)) {
   hist(cuantitativas[[col]], main=paste("Histograma de", col), xlab=col, col="lightblue")
 }
 
-# Pruebas de Normalidad (Kolmogorov-Smirnov)
-# Usamos ks.test contra una distribución normal teórica
+# Pruebas de Normalidad (Lilliefors)
+# Se contrasta la muestra contra una distribución normal con parámetros estimados
 for (col in colnames(cuantitativas)) {
-  res <- ks.test(scale(cuantitativas[[col]]), "pnorm")
-  cat("\nVariable:", col, "\np-value (K-S):", res$p.value, "\n")
+#  res <- ks.test(scale(cuantitativas[[col]]), "pnorm")
+  res <- lillie.test(cuantitativas[[col]])
+  cat("\nVariable:", col, "\np-value (Lillie):", res$p.value, "\n")
 }
 ```
 
-*Interpretación:* La mayoría de las variables muestran un fuerte sesgo (especialmente budget y revenue), lo que indica que no siguen una distribución normal. Los p-values menores a 0.05 en la prueba K-S confirman el rechazo de la hipótesis de normalidad.
+*Interpretación:* La mayoría de las variables muestran un fuerte sesgo (especialmente budget y revenue), lo que indica que no siguen una distribución normal. Los p-values menores a 0.05 en la prueba de Lilliefors confirman el rechazo de la hipótesis de normalidad.
 
 #### 3.2 Tablas de Frecuencia para Variables Cualitativas
 
-```{r}
+```{r tablas de frecuencia}
 # Género principal (tomando el primero de la lista)
 datos$genero_principal <- sapply(strsplit(as.character(datos$genres), "\\|"), `[`, 1)
 table(datos$genero_principal)
@@ -288,26 +172,31 @@ table(datos$genero_principal)
 # Idioma original
 table(datos$originalLanguage)
 ```
->>>>>>> Stashed changes
+
+### Preguntas
 
 1. ¿Cuáles son las 10 películas que contaron con más presupuesto?
 
-```{r}
-top_bud <- datos[order(datos$budget, decreasing = TRUE), ][1:10, ]
-top_bud$originalTitle
+```{r P1}
+datos %>%
+  arrange(desc(budget)) %>%
+  slice(1:10) %>%
+  select(title, budget)
 ```
 
 
 2. ¿Cuáles son las 10 películas que más ingresos tuvieron?
 
-```{r}
-top_rev <- datos[order(datos$revenue, decreasing = TRUE), ][1:10, ]
-top_rev$originalTitle
+```{r P2}
+datos %>%
+  arrange(desc(revenue)) %>%
+  slice(1:10) %>%
+  select(title, revenue)
 ```
 
 3. ¿Cuál es la película que más votos tuvo?
 
-```{r}
+```{r P3}
 datos %>%
     filter(voteCount == max(voteCount, na.rm = TRUE)) %>%
     select(title, voteCount)
@@ -315,22 +204,50 @@ datos %>%
 
 4. ¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?
 
-```{r}
+```{r P4}
 datos %>%
-<<<<<<< Updated upstream
   filter(voteAvg > 0) %>%
   filter(voteAvg == min(voteAvg)) %>%
   select(title,voteAvg)
-=======
-    filter(voteAvg == min(voteAvg, na.rm = TRUE)) %>%
-    select(title, voteAvg)
->>>>>>> Stashed changes
 ```
 
 5. ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
 
+```{r P5}
+MoviesYear <- datos %>%
+  group_by(releaseYear) %>%
+  summarise(count = n()) %>%
+  arrange(releaseYear)
+MoviesYear
+
+ggplot(MoviesYear, aes(x = releaseYear, y = count)) +
+  geom_col(na.rm = TRUE)
+
+MoviesYear %>%
+  filter(count == max(count, na.rm = TRUE)) %>%
+  select(releaseYear, count)
+
+```
+
+
 6. ¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico.
     1. ¿A qué género principal pertenecen las películas más largas?
+    
+```{r}
+datosF <- datos
+datosF$releaseDate <-  as.Date(datosF$releaseDate, format = "%Y-%m-%d")
+```
+
+
+```{r}
+generes <- datosF %>%
+  arrange(desc(releaseDate)) %>%
+  slice(1:20) %>%
+  count(genres, sort = TRUE)
+
+generes
+```
+
 
 7. ¿Las películas de qué genero principal obtuvieron mayores ganancias?
 
