@@ -229,13 +229,13 @@ MoviesYear %>%
 6. ¿Cuál es el género principal de las 20 películas más recientes? ¿Cuál es el género principal que predomina en el conjunto de datos? Represéntelo usando un gráfico.
     1. ¿A qué género principal pertenecen las películas más largas?
     
-```{r}
+```{r P6 datos}
 datosF <- datos
 datosF$releaseDate <- as.Date(datosF$releaseDate, format = "%Y-%m-%d")
 ```
 
 
-```{r}
+```{r P6 tabla}
 generes <- datosF %>%
     arrange(desc(releaseDate)) %>%
     slice(1:20) %>%
@@ -245,13 +245,83 @@ generes
 ```
 
 
+```{r P6 grafica}
+barplot(
+  height = generes$n,
+  names.arg = generes$genres,
+  main = "Cantidad de películas por género",
+  las = 2,
+  col = "steelblue"
+)
+
+```
+
+
 7. ¿Las películas de qué genero principal obtuvieron mayores ganancias?
+
+```{r}
+datos %>%
+    group_by(genres) %>%
+    summarise(total_rev = sum(revenue, na.rm=TRUE)) %>%
+    arrange(desc(total_rev)) %>%
+    slice_head(n = 10)
+```
+
 
 8. ¿La cantidad de actores influye en los ingresos de las películas? ¿se han hecho películas con más actores en los últimos años?
 
+```{r}
+datos %>% 
+  select(revenue,actorsAmount) %>% 
+  cor(use = "complete.obs")
+
+datos %>%
+  filter(!is.na(revenue)) %>%
+  ggplot(aes(x = actorsAmount, y = revenue)) +
+  geom_point(alpha = 0.5) +
+  scale_y_log10() +
+  labs(
+    x = "Cantidad de actores",
+    y = "Revenue",
+    title = "Relación entre ingresos y cantidad de actores"
+  )
+```
+
+Según la prueba de Pearson, se obtiene un coeficiente de -0.008, lo que indica que no hay correlación, lo que se puede notar en la gráfica.
+
 9. ¿Es posible que la cantidad de hombres y mujeres en el reparto influya en la popularidad y los ingresos de las películas?
 
+```{r}
+datos %>% 
+  select(revenue, castMenAmount) %>% 
+  cor(use = "complete.obs")
+
+datos %>% 
+  select(revenue, castWomenAmount) %>% 
+  cor(use = "complete.obs")
+
+
+datos %>% 
+  select(popularity, castMenAmount) %>% 
+  cor(use = "complete.obs")
+
+
+datos %>% 
+  select(popularity, castMenAmount) %>% 
+  cor(use = "complete.obs")
+```
+
+Todas las correlaciones tienen un coeficiente de Pearson muy cercano a 0. No hay correlación entre ninguna de las variables.
+
 10. ¿Quiénes son los directores que hicieron las 20 películas mejor calificadas?
+
+```{r}
+datos %>%
+    arrange(desc(revenue)) %>%
+    select(director,revenue) %>% 
+    slice_head(n = 20)
+```
+
 
 11. ¿Cómo se correlacionan los presupuestos con los ingresos? ¿Los altos presupuestos significan altos ingresos? Haga los gráficos que necesite, histograma, diagrama de dispersión
 
