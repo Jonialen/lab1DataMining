@@ -325,6 +325,34 @@ datos %>%
 
 11. ¿Cómo se correlacionan los presupuestos con los ingresos? ¿Los altos presupuestos significan altos ingresos? Haga los gráficos que necesite, histograma, diagrama de dispersión
 
+```{r P11}
+datos_presupuesto <- datos %>%
+    filter(budget > 0, revenue > 0)
+
+cor_presu_ingreso <- cor(datos_presupuesto$budget, datos_presupuesto$revenue)
+
+ggplot(datos_presupuesto, aes(x = budget, y = revenue)) +
+    geom_point(alpha = 0.4, color = "darkgreen") +
+    geom_smooth(method = "lm", col = "red", formula = y ~ x) +
+    scale_x_continuous(labels = scales::comma) +
+    scale_y_continuous(labels = scales::comma) +
+    labs(
+        title = paste("Correlación Presupuesto vs Ingresos:", round(cor_presu_ingreso, 4)),
+        subtitle = "Existe una correlación positiva considerable",
+        x = "Presupuesto (USD)", y = "Ingresos (USD)"
+    )
+
+ggplot(datos_presupuesto, aes(x = budget)) +
+    geom_histogram(fill = "steelblue", color = "white", bins = 30) +
+    scale_x_continuous(labels = scales::comma) +
+    labs(title = "Distribución de Presupuestos", x = "Presupuesto", y = "Frecuencia")
+
+ggplot(datos_presupuesto, aes(x = revenue)) +
+    geom_histogram(fill = "orange", color = "white", bins = 30) +
+    scale_x_continuous(labels = scales::comma) +
+    labs(title = "Distribución de Ingresos", x = "Ingresos", y = "Frecuencia")
+```
+
 12. ¿Se asocian ciertos meses de lanzamiento con mejores ingresos?
 
 ```{r P12}

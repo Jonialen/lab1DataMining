@@ -1,3 +1,4 @@
 # .gitignore (.gitignore)
 
 lab-1_files/
+*.html
