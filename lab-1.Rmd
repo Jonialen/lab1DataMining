@@ -18,6 +18,25 @@ datos <- read.csv("dataset/movies_2026.csv")
 
 ### 1. Exploración Inicial
 
+```{r Resumen}
+# Resumen general del conjunto de datos
+summary(datos)
+
+# Estructura de las variables
+str(datos)
+
+# Dimensiones del dataset
+dim(datos)
+
+# Primeras filas
+head(datos)
+
+# Conteo de valores faltantes
+colSums(is.na(datos))
+```
+
+### 2. Clasificación de Variables
+
 #### Clasificación de las variables
 
 ```{r Clasificación, echo=FALSE}
@@ -116,25 +135,6 @@ clasificacion_variables <- data.frame(
 clasificacion_variables
 ```
 
-```{r Resumen}
-# Resumen general del conjunto de datos
-summary(datos)
-
-# Estructura de las variables
-str(datos)
-
-# Dimensiones del dataset
-dim(datos)
-
-# Primeras filas
-head(datos)
-
-# Conteo de valores faltantes
-colSums(is.na(datos))
-```
-
-### 2. NO SE QUE ES EL 2 ERICK BLOQUEO EL LAB
-
 ### 3. Análisis Estadístico
 
 #### 3.1 Distribución Normal en Variables Cuantitativas
@@ -173,7 +173,7 @@ table(datos$genero_principal)
 table(datos$originalLanguage)
 ```
 
-### Preguntas
+### 4. Preguntas de Negocio
 
 1. ¿Cuáles son las 10 películas que contaron con más presupuesto?
 
