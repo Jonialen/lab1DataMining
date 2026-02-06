@@ -225,89 +225,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 19883    28</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Primeras filas</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>       id budget                       genres homePage productionCompany
-1 1627085      0                  Drama|Crime                           
-2 1626914      0                    Animation                           
-3 1626898      0                    Animation                           
-4 1626808      0 Thriller|Mystery|Documentary                           
-5 1626678      0                    Animation                           
-6 1626234      1                       Comedy                           
-  productionCompanyCountry productionCountry revenue runtime video
-1                                                  0      95 FALSE
-2                                                  0       3 FALSE
-3                                                  0       2 FALSE
-4                                                  0       5 FALSE
-5                                                  0      12 FALSE
-6                                                  1      14 FALSE
-                director
-1           Javad Hakami
-2         Kimmy Gatewood
-3         Kimmy Gatewood
-4          Felipe Roldán
-5         Kimmy Gatewood
-6 Jonathan Tan Jia Sheng
-                                                                                                                          actors
-1 Mohsen Ghasabian|Aida Mahiani|Mehran Ghafourian|Payam Ahmadinia|Masoud Karamati|Roya Javidnia|Nasim Adabi|Siavash Cheraghipour
-2                                                                     Kameron Jackson|Laura Weaving|sara weaving|Bertha Williams
-3                                                                                     Cedric Mitchell|Cajun mills|Laura Williams
-4                     Tomás Tuchsznajder|Matias Junas|Martin Etcheverry|Romeo Jeirfimczuk|Agustin Pulido|Alec Drach|Franco Serio
-5                                                                                   Cedric Mitchell|Tara Carpenter|Alissa Carter
-6                                                                 Sinjon Caelix Paguio Suresh|Hoe Wen Yen|Jonathan Tan Jia Sheng
-                                         actorsPopularity
-1 0.3453|0.1664|0.9684|0.3437|0.3713|0.2437|0.2796|0.2639
-2                                            0|0.0071|0|0
-3                                         0.0193|0|0.0143
-4                                           0|0|0|0|0|0|0
-5                                         0.0193|0.0071|0
-6                                                   0|0|0
-                                                                              actorsCharacter
-1                                                                                     |||||||
-2                                  Prince Charming|Evil Stepmother|Fairy Godmother|Cinderella
-3                                                                       Aladdin|Jafar|Jasmine
-4                                                                                      ||||||
-5                                                                   Caleb|Sarah|Commander Vex
-6 Rasparagus Asparagus Baragus|Rubber Bin/Snashi Snooty/400 Portra Gold|Keratin Karen (voice)
-                                    originalTitle
-1                                         غوطه ور
-2                                      Cinderella
-3                                         Aladdin
-4                             EL ANILLO Y EL DECK
-5                                  Crimson High 3
-6 Conversations with Rasparagus Asparagus Baragus
-                                            title originalLanguage popularity
-1                                        Immersed               fa     0.0357
-2                                      Cinderella               en     0.0357
-3                                         Aladdin               en     0.0214
-4                           THE RING AND THE DECK               es     0.0429
-5                                  Crimson High 3               en     0.0379
-6 Conversations with Rasparagus Asparagus Baragus               en     0.0286
-  releaseDate voteAvg voteCount genresAmount productionCoAmount
-1  2026-02-01       0         0            2                  0
-2  2026-02-01       0         0            1                  0
-3  2026-02-01       0         0            1                  0
-4  2026-02-01       0         0            3                  0
-5  2026-02-01       0         0            1                  0
-6  2026-02-01       0         0            1                  0
-  productionCountriesAmount actorsAmount castWomenAmount castMenAmount
-1                         0            8               2             5
-2                         0            4               0             0
-3                         0            3               0             0
-4                         0            7               0             0
-5                         0            3               0             0
-6                         0            3               0             0
-  releaseYear
-1        2026
-2        2026
-3        2026
-4        2026
-5        2026
-6        2026</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conteo de valores faltantes</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(datos))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conteo de valores faltantes</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(datos))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                       id                    budget                    genres 
                         0                         0                         0 
@@ -377,14 +296,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="distribución-normal-en-variables-cuantitativas">3.1 Distribución Normal en Variables Cuantitativas</h4>
 <p>Investigaremos si las variables cuantitativas principales siguen una distribución normal utilizando la prueba de Shapiro-Wilk (para una muestra, aunque el dataset es grande) y visualizaciones (Histogramas y Q-Q Plots). Debido al gran tamaño del dataset (19,883 filas), la prueba de Shapiro-Wilk suele ser muy sensible, por lo que nos apoyaremos más en histogramas y la prueba de Lilliefors.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selección de variables cuantitativas</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>cuantitativas <span class="ot">&lt;-</span> datos[, <span class="fu">c</span>(<span class="st">"budget"</span>, <span class="st">"revenue"</span>, <span class="st">"runtime"</span>, <span class="st">"popularity"</span>, <span class="st">"voteAvg"</span>, <span class="st">"voteCount"</span>)]</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogramas</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">colnames</span>(cuantitativas)) {</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hist</span>(cuantitativas[[col]], <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Histograma de"</span>, col), <span class="at">xlab =</span> col, <span class="at">col =</span> <span class="st">"lightblue"</span>)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selección de variables cuantitativas</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>cuantitativas <span class="ot">&lt;-</span> datos[, <span class="fu">c</span>(<span class="st">"budget"</span>, <span class="st">"revenue"</span>, <span class="st">"runtime"</span>, <span class="st">"popularity"</span>, <span class="st">"voteAvg"</span>, <span class="st">"voteCount"</span>)]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogramas</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">colnames</span>(cuantitativas)) {</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hist</span>(cuantitativas[[col]], <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Histograma de"</span>, col), <span class="at">xlab =</span> col, <span class="at">col =</span> <span class="st">"lightblue"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -392,13 +311,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pruebas de Normalidad (Lilliefors)</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Se contrasta la muestra contra una distribución normal con parámetros estimados</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">colnames</span>(cuantitativas)) {</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  res &lt;- ks.test(scale(cuantitativas[[col]]), "pnorm")</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">lillie.test</span>(cuantitativas[[col]])</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Variable:"</span>, col, <span class="st">"</span><span class="sc">\n</span><span class="st">p-value (Lillie):"</span>, res<span class="sc">$</span>p.value, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pruebas de Normalidad (Lilliefors)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Se contrasta la muestra contra una distribución normal con parámetros estimados</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> <span class="fu">colnames</span>(cuantitativas)) {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  res &lt;- ks.test(scale(cuantitativas[[col]]), "pnorm")</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">lillie.test</span>(cuantitativas[[col]])</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Variable:"</span>, col, <span class="st">"</span><span class="sc">\n</span><span class="st">p-value (Lillie):"</span>, res<span class="sc">$</span>p.value, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Variable: budget 
@@ -425,9 +344,9 @@ p-value (Lillie): 0 </code></pre>
 <section id="tablas-de-frecuencia-para-variables-cualitativas" class="level4">
 <h4 class="anchored" data-anchor-id="tablas-de-frecuencia-para-variables-cualitativas">3.2 Tablas de Frecuencia para Variables Cualitativas</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Género principal (tomando el primero de la lista)</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>genero_principal <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(<span class="fu">as.character</span>(datos<span class="sc">$</span>genres), <span class="st">"</span><span class="sc">\\</span><span class="st">|"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(datos<span class="sc">$</span>genero_principal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Género principal (tomando el primero de la lista)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>genero_principal <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(<span class="fu">as.character</span>(datos<span class="sc">$</span>genres), <span class="st">"</span><span class="sc">\\</span><span class="st">|"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(datos<span class="sc">$</span>genero_principal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          Action       Adventure       Animation          Comedy           Crime 
@@ -439,8 +358,8 @@ p-value (Lillie): 0 </code></pre>
        Thriller        TV Movie             War         Western 
             854              89              97              87 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Idioma original</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(datos<span class="sc">$</span>originalLanguage)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Idioma original</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(datos<span class="sc">$</span>originalLanguage)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    ab    af    am    ar    as    az    be    bg    bn    bs    ca    cn    cs 
@@ -469,10 +388,10 @@ p-value (Lillie): 0 </code></pre>
 <li>¿Cuáles son las 10 películas que contaron con más presupuesto?</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(budget)) <span class="sc">%&gt;%</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(title, budget)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(budget)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(title, budget)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                         title   budget
 1  Pirates of the Caribbean: On Stranger Tides 3.80e+08
@@ -491,10 +410,10 @@ p-value (Lillie): 0 </code></pre>
 <li>¿Cuáles son las 10 películas que más ingresos tuvieron?</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(revenue)) <span class="sc">%&gt;%</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(title, revenue)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(revenue)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(title, revenue)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                          title    revenue
 1                        Avatar 2847246203
@@ -513,9 +432,9 @@ p-value (Lillie): 0 </code></pre>
 <li>¿Cuál es la película que más votos tuvo?</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(voteCount <span class="sc">==</span> <span class="fu">max</span>(voteCount, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(title, voteCount)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(voteCount <span class="sc">==</span> <span class="fu">max</span>(voteCount, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(title, voteCount)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      title voteCount
 1 Inception     30788</code></pre>
@@ -525,10 +444,10 @@ p-value (Lillie): 0 </code></pre>
 <li>¿Cuál es la peor película de acuerdo a los votos de todos los usuarios?</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(voteAvg <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(voteAvg <span class="sc">==</span> <span class="fu">min</span>(voteAvg)) <span class="sc">%&gt;%</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(title, voteAvg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(voteAvg <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(voteAvg <span class="sc">==</span> <span class="fu">min</span>(voteAvg)) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(title, voteAvg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                  title voteAvg
 1                             King Keaw       1
@@ -565,11 +484,11 @@ p-value (Lillie): 0 </code></pre>
 <li>¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>MoviesYear <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(releaseYear) <span class="sc">%&gt;%</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(releaseYear)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>MoviesYear</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>MoviesYear <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(releaseYear) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(releaseYear)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>MoviesYear</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 102 × 2
    releaseYear count
@@ -586,8 +505,8 @@ p-value (Lillie): 0 </code></pre>
 10        1931     4
 # ℹ 92 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(MoviesYear, <span class="fu">aes</span>(<span class="at">x =</span> releaseYear, <span class="at">y =</span> count)) <span class="sc">+</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(MoviesYear, <span class="fu">aes</span>(<span class="at">x =</span> releaseYear, <span class="at">y =</span> count)) <span class="sc">+</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -595,9 +514,9 @@ p-value (Lillie): 0 </code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>MoviesYear <span class="sc">%&gt;%</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(count <span class="sc">==</span> <span class="fu">max</span>(count, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(releaseYear, count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>MoviesYear <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(count <span class="sc">==</span> <span class="fu">max</span>(count, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(releaseYear, count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
   releaseYear count
@@ -612,16 +531,16 @@ p-value (Lillie): 0 </code></pre>
 </ol></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>datosF <span class="ot">&lt;-</span> datos</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>datosF<span class="sc">$</span>releaseDate <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(datosF<span class="sc">$</span>releaseDate, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>datosF <span class="ot">&lt;-</span> datos</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>datosF<span class="sc">$</span>releaseDate <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(datosF<span class="sc">$</span>releaseDate, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>generes <span class="ot">&lt;-</span> datosF <span class="sc">%&gt;%</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(releaseDate)) <span class="sc">%&gt;%</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(genres, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>generes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>generes <span class="ot">&lt;-</span> datosF <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(releaseDate)) <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(genres, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>generes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                         genres n
 1                               4
@@ -646,27 +565,33 @@ p-value (Lillie): 0 </code></pre>
 <li><p>¿Se asocian ciertos meses de lanzamiento con mejores ingresos?</p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>releaseDate <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(datos<span class="sc">$</span>releaseDate)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>month <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(datos<span class="sc">$</span>releaseDate, <span class="st">"%m"</span>))</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>nombres_meses <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Enero"</span>, <span class="st">"Febrero"</span>, <span class="st">"Marzo"</span>, <span class="st">"Abril"</span>, <span class="st">"Mayo"</span>, <span class="st">"Junio"</span>,</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Julio"</span>, <span class="st">"Agosto"</span>, <span class="st">"Septiembre"</span>, <span class="st">"Octubre"</span>, <span class="st">"Noviembre"</span>, <span class="st">"Diciembre"</span></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>monthName <span class="ot">&lt;-</span> <span class="fu">factor</span>(nombres_meses[datos<span class="sc">$</span>month], <span class="at">levels =</span> nombres_meses)</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>ingresos_mes <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(monthName) <span class="sc">%&gt;%</span></span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">ingreso_total =</span> <span class="fu">sum</span>(<span class="fu">as.numeric</span>(revenue), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">ingreso_promedio =</span> <span class="fu">mean</span>(<span class="fu">as.numeric</span>(revenue), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">conteo =</span> <span class="fu">n</span>()</span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(monthName))</span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ingresos_mes, <span class="fu">aes</span>(<span class="at">x =</span> monthName, <span class="at">y =</span> ingreso_total, <span class="at">fill =</span> monthName)) <span class="sc">+</span></span>
-<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Ingresos Totales por Mes"</span>, <span class="at">x =</span> <span class="st">"Mes"</span>, <span class="at">y =</span> <span class="st">"Ingresos"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>datos_comerciales <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> <span class="fu">filter</span>(revenue <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>datos_comerciales<span class="sc">$</span>releaseDate <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(datos_comerciales<span class="sc">$</span>releaseDate)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>datos_comerciales<span class="sc">$</span>month <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(datos_comerciales<span class="sc">$</span>releaseDate, <span class="st">"%m"</span>))</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>nombres_meses <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Enero"</span>, <span class="st">"Febrero"</span>, <span class="st">"Marzo"</span>, <span class="st">"Abril"</span>, <span class="st">"Mayo"</span>, <span class="st">"Junio"</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Julio"</span>, <span class="st">"Agosto"</span>, <span class="st">"Septiembre"</span>, <span class="st">"Octubre"</span>, <span class="st">"Noviembre"</span>, <span class="st">"Diciembre"</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>datos_comerciales<span class="sc">$</span>monthName <span class="ot">&lt;-</span> <span class="fu">factor</span>(nombres_meses[datos_comerciales<span class="sc">$</span>month], <span class="at">levels =</span> nombres_meses)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>ingresos_mes <span class="ot">&lt;-</span> datos_comerciales <span class="sc">%&gt;%</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(monthName) <span class="sc">%&gt;%</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">ingreso_total =</span> <span class="fu">sum</span>(revenue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">ingreso_promedio =</span> <span class="fu">mean</span>(revenue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">conteo =</span> <span class="fu">n</span>()</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(monthName))</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ingresos_mes, <span class="fu">aes</span>(<span class="at">x =</span> monthName, <span class="at">y =</span> ingreso_total, <span class="at">fill =</span> monthName)) <span class="sc">+</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Ingresos Totales por Mes de Lanzamiento"</span>,</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"(Solo películas con ingresos reportados)"</span>,</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Mes"</span>, <span class="at">y =</span> <span class="st">"Ingresos Totales"</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -676,73 +601,77 @@ p-value (Lillie): 0 </code></pre>
 </div>
 </div>
 <ol start="13" type="1">
-<li>¿En qué meses se han visto los lanzamientos con mejores ingresos?¿cuantas películas, en promedio, se han lanzado por mes?</li>
+<li>¿En qué meses se han visto los lanzamientos con mejores ingresos? ¿cuántas películas, en promedio, se han lanzado por mes?</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ingresos_mes <span class="sc">%&gt;%</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(ingreso_promedio)) <span class="sc">%&gt;%</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(monthName, ingreso_promedio)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ingresos_mes <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(ingreso_promedio)) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(monthName, ingreso_promedio, conteo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 12 × 2
-   monthName  ingreso_promedio
-   &lt;fct&gt;                 &lt;dbl&gt;
- 1 Junio             94747108.
- 2 Mayo              87719769.
- 3 Julio             76028696.
- 4 Abril             52671273.
- 5 Marzo             51053300.
- 6 Febrero           39138627.
- 7 Octubre           39133157.
- 8 Agosto            35930725.
- 9 Septiembre        31958536.
-10 Diciembre         16517826.
-11 Noviembre         12700099.
-12 Enero              7127284.</code></pre>
+<pre><code># A tibble: 12 × 3
+   monthName  ingreso_promedio conteo
+   &lt;fct&gt;                 &lt;dbl&gt;  &lt;int&gt;
+ 1 Junio            165807439.    468
+ 2 Mayo             165272557.    371
+ 3 Julio            132764089.    465
+ 4 Noviembre        127811630.    470
+ 5 Diciembre        124411468.    579
+ 6 Abril            102252891.    358
+ 7 Marzo             97108375.    429
+ 8 Octubre           85148627.    489
+ 9 Febrero           82768572.    366
+10 Agosto            70777333.    464
+11 Enero             60407604.    368
+12 Septiembre        60335029.    571</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>anos_activos <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(datos<span class="sc">$</span>releaseYear))</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>promedio_mensual <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(monthName) <span class="sc">%&gt;%</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">total_peliculas =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">promedio_por_ano =</span> total_peliculas <span class="sc">/</span> anos_activos)</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>promedio_mensual</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>releaseDate <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(datos<span class="sc">$</span>releaseDate)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>month <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(datos<span class="sc">$</span>releaseDate, <span class="st">"%m"</span>))</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>monthName <span class="ot">&lt;-</span> <span class="fu">factor</span>(nombres_meses[datos<span class="sc">$</span>month], <span class="at">levels =</span> nombres_meses)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>anos_en_dataset <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(<span class="fu">na.omit</span>(datos<span class="sc">$</span>releaseYear)))</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>promedio_mensual <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(monthName)) <span class="sc">%&gt;%</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(monthName) <span class="sc">%&gt;%</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">total_peliculas =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">promedio_por_ano =</span> total_peliculas <span class="sc">/</span> anos_en_dataset)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>promedio_mensual</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 13 × 3
+<pre><code># A tibble: 12 × 3
    monthName  total_peliculas promedio_por_ano
    &lt;fct&gt;                &lt;int&gt;            &lt;dbl&gt;
- 1 Enero                 3119          30.6   
- 2 Febrero                774           7.59  
- 3 Marzo                  816           8     
- 4 Abril                  695           6.81  
- 5 Mayo                   699           6.85  
- 6 Junio                  819           8.03  
- 7 Julio                  812           7.96  
- 8 Agosto                 914           8.96  
- 9 Septiembre            1078          10.6   
-10 Octubre               1064          10.4   
-11 Noviembre             4730          46.4   
-12 Diciembre             4361          42.8   
-13 &lt;NA&gt;                     2           0.0196</code></pre>
+ 1 Enero                 3119            30.9 
+ 2 Febrero                774             7.66
+ 3 Marzo                  816             8.08
+ 4 Abril                  695             6.88
+ 5 Mayo                   699             6.92
+ 6 Junio                  819             8.11
+ 7 Julio                  812             8.04
+ 8 Agosto                 914             9.05
+ 9 Septiembre            1078            10.7 
+10 Octubre               1064            10.5 
+11 Noviembre             4730            46.8 
+12 Diciembre             4361            43.2 </code></pre>
 </div>
 </div>
 <ol start="14" type="1">
 <li>¿Cómo se correlacionan las calificaciones con el éxito comercial?</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>datos_filtrados <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> <span class="fu">filter</span>(revenue <span class="sc">&gt;</span> <span class="dv">0</span>, voteCount <span class="sc">&gt;</span> <span class="dv">10</span>)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>cor_val <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_filtrados<span class="sc">$</span>voteAvg, datos_filtrados<span class="sc">$</span>revenue, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(datos_filtrados, <span class="fu">aes</span>(<span class="at">x =</span> voteAvg, <span class="at">y =</span> revenue)) <span class="sc">+</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Correlación Calificaciones vs Ingresos:"</span>, <span class="fu">round</span>(cor_val, <span class="dv">3</span>)),</span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Calificación Promedio"</span>, <span class="at">y =</span> <span class="st">"Ingresos"</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>datos_cor_calif <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(revenue <span class="sc">&gt;</span> <span class="dv">0</span>, voteCount <span class="sc">&gt;</span> <span class="dv">50</span>) <span class="co"># Filtramos por votos significativos</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>cor_val <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_cor_calif<span class="sc">$</span>voteAvg, datos_cor_calif<span class="sc">$</span>revenue, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(datos_cor_calif, <span class="fu">aes</span>(<span class="at">x =</span> voteAvg, <span class="at">y =</span> revenue)) <span class="sc">+</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">col =</span> <span class="st">"darkred"</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Correlación Calificaciones vs Ingresos: "</span>, <span class="fu">round</span>(cor_val, <span class="dv">4</span>)),</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Películas con más de 50 votos e ingresos &gt; 0"</span>,</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Calificación Promedio"</span>, <span class="at">y =</span> <span class="st">"Ingresos"</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -755,24 +684,25 @@ p-value (Lillie): 0 </code></pre>
 <li>¿La popularidad del elenco está directamente correlacionada con el éxito de taquilla?</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>actorsPopularity <span class="ot">&lt;-</span> <span class="fu">iconv</span>(datos<span class="sc">$</span>actorsPopularity, <span class="st">"UTF-8"</span>, <span class="st">"ASCII"</span>, <span class="at">sub =</span> <span class="st">""</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>totalCastPopularity <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(<span class="fu">as.character</span>(datos<span class="sc">$</span>actorsPopularity), <span class="st">"</span><span class="sc">\\</span><span class="st">|"</span>), <span class="cf">function</span>(x) {</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    vals <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">as.numeric</span>(x))</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(vals[<span class="sc">!</span><span class="fu">is.na</span>(vals)])</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>datos_cast <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> <span class="fu">filter</span>(revenue <span class="sc">&gt;</span> <span class="dv">0</span>, totalCastPopularity <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>cor_cast <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_cast<span class="sc">$</span>totalCastPopularity, datos_cast<span class="sc">$</span>revenue, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(datos_cast, <span class="fu">aes</span>(<span class="at">x =</span> totalCastPopularity, <span class="at">y =</span> revenue)) <span class="sc">+</span></span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
-<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Correlación Popularidad Elenco vs Ingresos:"</span>, <span class="fu">round</span>(cor_cast, <span class="dv">3</span>)),</span>
-<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Popularidad Total del Elenco (Suma)"</span>, <span class="at">y =</span> <span class="st">"Ingresos (Revenue)"</span></span>
-<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>actorsPopularity <span class="ot">&lt;-</span> <span class="fu">iconv</span>(datos<span class="sc">$</span>actorsPopularity, <span class="st">"UTF-8"</span>, <span class="st">"ASCII"</span>, <span class="at">sub =</span> <span class="st">""</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>totalCastPopularity <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(<span class="fu">as.character</span>(datos<span class="sc">$</span>actorsPopularity), <span class="st">"</span><span class="sc">\\</span><span class="st">|"</span>), <span class="cf">function</span>(x) {</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    vals <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">as.numeric</span>(x))</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(vals[<span class="sc">!</span><span class="fu">is.na</span>(vals)])</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>datos_cast_analisis <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(revenue <span class="sc">&gt;</span> <span class="dv">0</span>, totalCastPopularity <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>cor_cast <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_cast_analisis<span class="sc">$</span>totalCastPopularity, datos_cast_analisis<span class="sc">$</span>revenue, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(datos_cast_analisis, <span class="fu">aes</span>(<span class="at">x =</span> totalCastPopularity, <span class="at">y =</span> revenue)) <span class="sc">+</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">color =</span> <span class="st">"darkgreen"</span>) <span class="sc">+</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">col =</span> <span class="st">"orange"</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Correlación Popularidad Elenco vs Ingresos: "</span>, <span class="fu">round</span>(cor_cast, <span class="dv">4</span>)),</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Popularidad Sumada del Elenco"</span>, <span class="at">y =</span> <span class="st">"Ingresos"</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -785,42 +715,51 @@ p-value (Lillie): 0 </code></pre>
 <li>¿Qué estrategias de marketing, como videos promocionales o páginas oficiales, generan mejores resultados?</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>tiene_web <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(datos<span class="sc">$</span>homePage <span class="sc">==</span> <span class="st">""</span> <span class="sc">|</span> <span class="fu">is.na</span>(datos<span class="sc">$</span>homePage), <span class="st">"No"</span>, <span class="st">"Sí"</span>)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>marketing_web <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(tiene_web) <span class="sc">%&gt;%</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">ingreso_promedio =</span> <span class="fu">mean</span>(revenue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">popularidad_promedio =</span> <span class="fu">mean</span>(popularity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>marketing_video <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(video) <span class="sc">%&gt;%</span></span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">ingreso_promedio =</span> <span class="fu">mean</span>(revenue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">popularidad_promedio =</span> <span class="fu">mean</span>(popularity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(marketing_web)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>datos_mkt <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">tiene_web =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(homePage) <span class="sc">|</span> homePage <span class="sc">==</span> <span class="st">""</span>, <span class="st">"Sin Web"</span>, <span class="st">"Con Web"</span>),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">tiene_video =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(video) <span class="sc">|</span> video <span class="sc">==</span> <span class="cn">FALSE</span>, <span class="st">"Sin Video"</span>, <span class="st">"Con Video"</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(revenue <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>resumen_web <span class="ot">&lt;-</span> datos_mkt <span class="sc">%&gt;%</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(tiene_web) <span class="sc">%&gt;%</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">ingreso_medio =</span> <span class="fu">mean</span>(revenue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">popularidad_media =</span> <span class="fu">mean</span>(popularity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>resumen_video <span class="ot">&lt;-</span> datos_mkt <span class="sc">%&gt;%</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(tiene_video) <span class="sc">%&gt;%</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">ingreso_medio =</span> <span class="fu">mean</span>(revenue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">popularidad_media =</span> <span class="fu">mean</span>(popularity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(resumen_web)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 3
-  tiene_web ingreso_promedio popularidad_promedio
-  &lt;chr&gt;                &lt;dbl&gt;                &lt;dbl&gt;
-1 No               13295078.                 15.4
-2 Sí               68249236.                 53.8</code></pre>
+<pre><code># A tibble: 2 × 4
+  tiene_web ingreso_medio popularidad_media     n
+  &lt;chr&gt;             &lt;dbl&gt;             &lt;dbl&gt; &lt;int&gt;
+1 Con Web      150658845.              85.1  2540
+2 Sin Web       66410262.              31.0  2858</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(marketing_video)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(resumen_video)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  video ingreso_promedio popularidad_promedio
-  &lt;lgl&gt;            &lt;dbl&gt;                &lt;dbl&gt;
-1 FALSE        24845170.                 24.0
-2 TRUE           506309.                 45.2
-3 NA          190528171.                112. </code></pre>
+<pre><code># A tibble: 2 × 4
+  tiene_video ingreso_medio popularidad_media     n
+  &lt;chr&gt;               &lt;dbl&gt;             &lt;dbl&gt; &lt;int&gt;
+1 Con Video       10632497.              17.6     4
+2 Sin Video      106123742.              56.5  5394</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(marketing_web, <span class="fu">aes</span>(<span class="at">x =</span> tiene_web, <span class="at">y =</span> ingreso_promedio, <span class="at">fill =</span> tiene_web)) <span class="sc">+</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Impacto de tener Página Web en Ingresos"</span>, <span class="at">x =</span> <span class="st">"¿Tiene Web?"</span>, <span class="at">y =</span> <span class="st">"Ingreso Promedio"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(resumen_web, <span class="fu">aes</span>(<span class="at">x =</span> tiene_web, <span class="at">y =</span> ingreso_medio, <span class="at">fill =</span> tiene_web)) <span class="sc">+</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Efectividad de Marketing: Página Web"</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Ingreso Promedio"</span>, <span class="at">x =</span> <span class="st">"Estrategia"</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

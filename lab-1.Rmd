@@ -28,9 +28,6 @@ str(datos)
 # Dimensiones del dataset
 dim(datos)
 
-# Primeras filas
-head(datos)
-
 # Conteo de valores faltantes
 colSums(is.na(datos))
 ```
@@ -261,19 +258,21 @@ generes
 12. ¿Se asocian ciertos meses de lanzamiento con mejores ingresos?
 
 ```{r P12}
-datos$releaseDate <- as.Date(datos$releaseDate)
-datos$month <- as.numeric(format(datos$releaseDate, "%m"))
+datos_comerciales <- datos %>% filter(revenue > 0)
+
+datos_comerciales$releaseDate <- as.Date(datos_comerciales$releaseDate)
+datos_comerciales$month <- as.numeric(format(datos_comerciales$releaseDate, "%m"))
 nombres_meses <- c(
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 )
-datos$monthName <- factor(nombres_meses[datos$month], levels = nombres_meses)
+datos_comerciales$monthName <- factor(nombres_meses[datos_comerciales$month], levels = nombres_meses)
 
-ingresos_mes <- datos %>%
+ingresos_mes <- datos_comerciales %>%
     group_by(monthName) %>%
     summarise(
-        ingreso_total = sum(as.numeric(revenue), na.rm = TRUE),
-        ingreso_promedio = mean(as.numeric(revenue), na.rm = TRUE),
+        ingreso_total = sum(revenue, na.rm = TRUE),
+        ingreso_promedio = mean(revenue, na.rm = TRUE),
         conteo = n()
     ) %>%
     filter(!is.na(monthName))
@@ -281,21 +280,31 @@ ingresos_mes <- datos %>%
 ggplot(ingresos_mes, aes(x = monthName, y = ingreso_total, fill = monthName)) +
     geom_col() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    labs(title = "Ingresos Totales por Mes", x = "Mes", y = "Ingresos")
+    labs(
+        title = "Ingresos Totales por Mes de Lanzamiento",
+        subtitle = "(Solo películas con ingresos reportados)",
+        x = "Mes", y = "Ingresos Totales"
+    )
 ```
 
-13. ¿En qué meses se han visto los lanzamientos con mejores ingresos?¿cuantas películas, en promedio, se han lanzado por mes?
+13. ¿En qué meses se han visto los lanzamientos con mejores ingresos? ¿cuántas películas, en promedio, se han lanzado por mes?
 
 ```{r P13}
 ingresos_mes %>%
     arrange(desc(ingreso_promedio)) %>%
-    select(monthName, ingreso_promedio)
+    select(monthName, ingreso_promedio, conteo)
 
-anos_activos <- length(unique(datos$releaseYear))
+datos$releaseDate <- as.Date(datos$releaseDate)
+datos$month <- as.numeric(format(datos$releaseDate, "%m"))
+datos$monthName <- factor(nombres_meses[datos$month], levels = nombres_meses)
+
+anos_en_dataset <- length(unique(na.omit(datos$releaseYear)))
+
 promedio_mensual <- datos %>%
+    filter(!is.na(monthName)) %>%
     group_by(monthName) %>%
     summarise(total_peliculas = n()) %>%
-    mutate(promedio_por_ano = total_peliculas / anos_activos)
+    mutate(promedio_por_ano = total_peliculas / anos_en_dataset)
 
 promedio_mensual
 ```
@@ -303,15 +312,17 @@ promedio_mensual
 14. ¿Cómo se correlacionan las calificaciones con el éxito comercial?
 
 ```{r P14}
-datos_filtrados <- datos %>% filter(revenue > 0, voteCount > 10)
+datos_cor_calif <- datos %>%
+    filter(revenue > 0, voteCount > 50) # Filtramos por votos significativos
 
-cor_val <- cor(datos_filtrados$voteAvg, datos_filtrados$revenue, use = "complete.obs")
+cor_val <- cor(datos_cor_calif$voteAvg, datos_cor_calif$revenue, use = "complete.obs")
 
-ggplot(datos_filtrados, aes(x = voteAvg, y = revenue)) +
-    geom_point(alpha = 0.3) +
-    geom_smooth(method = "lm", col = "red") +
+ggplot(datos_cor_calif, aes(x = voteAvg, y = revenue)) +
+    geom_point(alpha = 0.4, color = "steelblue") +
+    geom_smooth(method = "lm", col = "darkred", formula = y ~ x) +
     labs(
-        title = paste("Correlación Calificaciones vs Ingresos:", round(cor_val, 3)),
+        title = paste("Correlación Calificaciones vs Ingresos: ", round(cor_val, 4)),
+        subtitle = "Películas con más de 50 votos e ingresos > 0",
         x = "Calificación Promedio", y = "Ingresos"
     )
 ```
@@ -326,43 +337,54 @@ datos$totalCastPopularity <- sapply(strsplit(as.character(datos$actorsPopularity
     sum(vals[!is.na(vals)])
 })
 
-datos_cast <- datos %>% filter(revenue > 0, totalCastPopularity > 0)
+datos_cast_analisis <- datos %>%
+    filter(revenue > 0, totalCastPopularity > 0)
 
-cor_cast <- cor(datos_cast$totalCastPopularity, datos_cast$revenue, use = "complete.obs")
+cor_cast <- cor(datos_cast_analisis$totalCastPopularity, datos_cast_analisis$revenue, use = "complete.obs")
 
-ggplot(datos_cast, aes(x = totalCastPopularity, y = revenue)) +
-    geom_point(alpha = 0.3, color = "darkblue") +
-    geom_smooth(method = "lm", col = "red", formula = y ~ x) +
+ggplot(datos_cast_analisis, aes(x = totalCastPopularity, y = revenue)) +
+    geom_point(alpha = 0.3, color = "darkgreen") +
+    geom_smooth(method = "lm", col = "orange", formula = y ~ x) +
     labs(
-        title = paste("Correlación Popularidad Elenco vs Ingresos:", round(cor_cast, 3)),
-        x = "Popularidad Total del Elenco (Suma)", y = "Ingresos (Revenue)"
+        title = paste("Correlación Popularidad Elenco vs Ingresos: ", round(cor_cast, 4)),
+        x = "Popularidad Sumada del Elenco", y = "Ingresos"
     )
 ```
 
 16. ¿Qué estrategias de marketing, como videos promocionales o páginas oficiales, generan mejores resultados?
 
 ```{r P16}
-datos$tiene_web <- ifelse(datos$homePage == "" | is.na(datos$homePage), "No", "Sí")
+datos_mkt <- datos %>%
+    mutate(
+        tiene_web = ifelse(is.na(homePage) | homePage == "", "Sin Web", "Con Web"),
+        tiene_video = ifelse(is.na(video) | video == FALSE, "Sin Video", "Con Video")
+    ) %>%
+    filter(revenue > 0)
 
-marketing_web <- datos %>%
+resumen_web <- datos_mkt %>%
     group_by(tiene_web) %>%
     summarise(
-        ingreso_promedio = mean(revenue, na.rm = TRUE),
-        popularidad_promedio = mean(popularity, na.rm = TRUE)
+        ingreso_medio = mean(revenue, na.rm = TRUE),
+        popularidad_media = mean(popularity, na.rm = TRUE),
+        n = n()
     )
 
-marketing_video <- datos %>%
-    group_by(video) %>%
+resumen_video <- datos_mkt %>%
+    group_by(tiene_video) %>%
     summarise(
-        ingreso_promedio = mean(revenue, na.rm = TRUE),
-        popularidad_promedio = mean(popularity, na.rm = TRUE)
+        ingreso_medio = mean(revenue, na.rm = TRUE),
+        popularidad_media = mean(popularity, na.rm = TRUE),
+        n = n()
     )
 
-print(marketing_web)
-print(marketing_video)
+print(resumen_web)
+print(resumen_video)
 
-ggplot(marketing_web, aes(x = tiene_web, y = ingreso_promedio, fill = tiene_web)) +
+ggplot(resumen_web, aes(x = tiene_web, y = ingreso_medio, fill = tiene_web)) +
     geom_col() +
-    labs(title = "Impacto de tener Página Web en Ingresos", x = "¿Tiene Web?", y = "Ingreso Promedio")
+    labs(
+        title = "Efectividad de Marketing: Página Web",
+        y = "Ingreso Promedio", x = "Estrategia"
+    )
 ```
 
