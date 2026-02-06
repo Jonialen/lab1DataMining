@@ -146,17 +146,17 @@ Investigaremos si las variables cuantitativas principales siguen una distribuci�
 cuantitativas <- datos[, c("budget", "revenue", "runtime", "popularity", "voteAvg", "voteCount")]
 
 # Histogramas
-par(mfrow=c(2,3))
+par(mfrow = c(2, 3))
 for (col in colnames(cuantitativas)) {
-  hist(cuantitativas[[col]], main=paste("Histograma de", col), xlab=col, col="lightblue")
+    hist(cuantitativas[[col]], main = paste("Histograma de", col), xlab = col, col = "lightblue")
 }
 
 # Pruebas de Normalidad (Lilliefors)
 # Se contrasta la muestra contra una distribución normal con parámetros estimados
 for (col in colnames(cuantitativas)) {
-#  res <- ks.test(scale(cuantitativas[[col]]), "pnorm")
-  res <- lillie.test(cuantitativas[[col]])
-  cat("\nVariable:", col, "\np-value (Lillie):", res$p.value, "\n")
+    #  res <- ks.test(scale(cuantitativas[[col]]), "pnorm")
+    res <- lillie.test(cuantitativas[[col]])
+    cat("\nVariable:", col, "\np-value (Lillie):", res$p.value, "\n")
 }
 ```
 
@@ -179,9 +179,9 @@ table(datos$originalLanguage)
 
 ```{r P1}
 datos %>%
-  arrange(desc(budget)) %>%
-  slice(1:10) %>%
-  select(title, budget)
+    arrange(desc(budget)) %>%
+    slice(1:10) %>%
+    select(title, budget)
 ```
 
 
@@ -189,9 +189,9 @@ datos %>%
 
 ```{r P2}
 datos %>%
-  arrange(desc(revenue)) %>%
-  slice(1:10) %>%
-  select(title, revenue)
+    arrange(desc(revenue)) %>%
+    slice(1:10) %>%
+    select(title, revenue)
 ```
 
 3. ¿Cuál es la película que más votos tuvo?
@@ -206,27 +206,26 @@ datos %>%
 
 ```{r P4}
 datos %>%
-  filter(voteAvg > 0) %>%
-  filter(voteAvg == min(voteAvg)) %>%
-  select(title,voteAvg)
+    filter(voteAvg > 0) %>%
+    filter(voteAvg == min(voteAvg)) %>%
+    select(title, voteAvg)
 ```
 
 5. ¿Cuántas películas se hicieron en cada año? ¿En qué año se hicieron más películas? Haga un gráfico de barras
 
 ```{r P5}
 MoviesYear <- datos %>%
-  group_by(releaseYear) %>%
-  summarise(count = n()) %>%
-  arrange(releaseYear)
+    group_by(releaseYear) %>%
+    summarise(count = n()) %>%
+    arrange(releaseYear)
 MoviesYear
 
 ggplot(MoviesYear, aes(x = releaseYear, y = count)) +
-  geom_col(na.rm = TRUE)
+    geom_col(na.rm = TRUE)
 
 MoviesYear %>%
-  filter(count == max(count, na.rm = TRUE)) %>%
-  select(releaseYear, count)
-
+    filter(count == max(count, na.rm = TRUE)) %>%
+    select(releaseYear, count)
 ```
 
 
@@ -235,15 +234,15 @@ MoviesYear %>%
     
 ```{r}
 datosF <- datos
-datosF$releaseDate <-  as.Date(datosF$releaseDate, format = "%Y-%m-%d")
+datosF$releaseDate <- as.Date(datosF$releaseDate, format = "%Y-%m-%d")
 ```
 
 
 ```{r}
 generes <- datosF %>%
-  arrange(desc(releaseDate)) %>%
-  slice(1:20) %>%
-  count(genres, sort = TRUE)
+    arrange(desc(releaseDate)) %>%
+    slice(1:20) %>%
+    count(genres, sort = TRUE)
 
 generes
 ```
