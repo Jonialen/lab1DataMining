@@ -260,11 +260,109 @@ generes
 
 12. ¿Se asocian ciertos meses de lanzamiento con mejores ingresos?
 
+```{r P12}
+datos$releaseDate <- as.Date(datos$releaseDate)
+datos$month <- as.numeric(format(datos$releaseDate, "%m"))
+nombres_meses <- c(
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+)
+datos$monthName <- factor(nombres_meses[datos$month], levels = nombres_meses)
+
+ingresos_mes <- datos %>%
+    group_by(monthName) %>%
+    summarise(
+        ingreso_total = sum(as.numeric(revenue), na.rm = TRUE),
+        ingreso_promedio = mean(as.numeric(revenue), na.rm = TRUE),
+        conteo = n()
+    ) %>%
+    filter(!is.na(monthName))
+
+ggplot(ingresos_mes, aes(x = monthName, y = ingreso_total, fill = monthName)) +
+    geom_col() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Ingresos Totales por Mes", x = "Mes", y = "Ingresos")
+```
+
 13. ¿En qué meses se han visto los lanzamientos con mejores ingresos?¿cuantas películas, en promedio, se han lanzado por mes?
+
+```{r P13}
+ingresos_mes %>%
+    arrange(desc(ingreso_promedio)) %>%
+    select(monthName, ingreso_promedio)
+
+anos_activos <- length(unique(datos$releaseYear))
+promedio_mensual <- datos %>%
+    group_by(monthName) %>%
+    summarise(total_peliculas = n()) %>%
+    mutate(promedio_por_ano = total_peliculas / anos_activos)
+
+promedio_mensual
+```
 
 14. ¿Cómo se correlacionan las calificaciones con el éxito comercial?
 
+```{r P14}
+datos_filtrados <- datos %>% filter(revenue > 0, voteCount > 10)
+
+cor_val <- cor(datos_filtrados$voteAvg, datos_filtrados$revenue, use = "complete.obs")
+
+ggplot(datos_filtrados, aes(x = voteAvg, y = revenue)) +
+    geom_point(alpha = 0.3) +
+    geom_smooth(method = "lm", col = "red") +
+    labs(
+        title = paste("Correlación Calificaciones vs Ingresos:", round(cor_val, 3)),
+        x = "Calificación Promedio", y = "Ingresos"
+    )
+```
+
 15. ¿La popularidad del elenco está directamente correlacionada con el éxito de taquilla?
 
+```{r P15}
+datos$actorsPopularity <- iconv(datos$actorsPopularity, "UTF-8", "ASCII", sub = "")
+
+datos$totalCastPopularity <- sapply(strsplit(as.character(datos$actorsPopularity), "\\|"), function(x) {
+    vals <- suppressWarnings(as.numeric(x))
+    sum(vals[!is.na(vals)])
+})
+
+datos_cast <- datos %>% filter(revenue > 0, totalCastPopularity > 0)
+
+cor_cast <- cor(datos_cast$totalCastPopularity, datos_cast$revenue, use = "complete.obs")
+
+ggplot(datos_cast, aes(x = totalCastPopularity, y = revenue)) +
+    geom_point(alpha = 0.3, color = "darkblue") +
+    geom_smooth(method = "lm", col = "red", formula = y ~ x) +
+    labs(
+        title = paste("Correlación Popularidad Elenco vs Ingresos:", round(cor_cast, 3)),
+        x = "Popularidad Total del Elenco (Suma)", y = "Ingresos (Revenue)"
+    )
+```
+
 16. ¿Qué estrategias de marketing, como videos promocionales o páginas oficiales, generan mejores resultados?
+
+```{r P16}
+datos$tiene_web <- ifelse(datos$homePage == "" | is.na(datos$homePage), "No", "Sí")
+
+marketing_web <- datos %>%
+    group_by(tiene_web) %>%
+    summarise(
+        ingreso_promedio = mean(revenue, na.rm = TRUE),
+        popularidad_promedio = mean(popularity, na.rm = TRUE)
+    )
+
+marketing_video <- datos %>%
+    group_by(video) %>%
+    summarise(
+        ingreso_promedio = mean(revenue, na.rm = TRUE),
+        popularidad_promedio = mean(popularity, na.rm = TRUE)
+    )
+
+print(marketing_web)
+print(marketing_video)
+
+ggplot(marketing_web, aes(x = tiene_web, y = ingreso_promedio, fill = tiene_web)) +
+    geom_col() +
+    labs(title = "Impacto de tener Página Web en Ingresos", x = "¿Tiene Web?", y = "Ingreso Promedio")
+```
 
