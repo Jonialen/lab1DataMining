@@ -1,5 +1,7 @@
 ---
 title: "Laboratorio 2"
+author: "Jonathan Díaz, Martín Pérez, Karen Toledo"
+date: "2026-02-23"
 output: html_document
 ---
 
