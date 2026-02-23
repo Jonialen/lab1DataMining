@@ -5,3 +5,44 @@ date: "2026-02-23"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(cluster)
+library(factoextra)
+library(GGally)
+library(clustertend)
+```
+
+```{r datos}
+datos <- read.csv("dataset/movies_2026.csv")
+
+# Selección de variables cuantitativas
+df_num <- datos[, c("budget", "revenue", "runtime", "popularity", "voteAvg", "voteCount")]
+```
+
+## 3.2 Estandarización
+
+```{r}
+df_clean <- na.omit(df_num)
+df_scaled <- scale(df_clean)
+```
+
+# 4. Tendencia al agrupamiento
+
+## 4.1 Estadístico de Hopkins
+
+```{r}
+set.seed(123)
+hopkins_stat <- hopkins(df_scaled, n = 50)
+hopkins_stat
+```
+
+
+### Clustering
+
+```{r Clustering}
+
+```
+
+### das
