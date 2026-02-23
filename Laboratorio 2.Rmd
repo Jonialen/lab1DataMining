@@ -34,15 +34,86 @@ df_scaled <- scale(df_clean)
 
 ```{r}
 set.seed(123)
-hopkins_stat <- hopkins(df_scaled, n = 50)
-hopkins_stat
+muestra <- df_scaled[sample(1:nrow(df_scaled), 200), ]
+hopkins(muestra, n = 100)
 ```
 
+### Interpretación
 
-### Clustering
+- Valores cercanos a 0.5 → datos aleatorios
+- Valores > 0.7 → fuerte tendencia a clustering
 
-```{r Clustering}
+El coeficiente de hopkins es altamente cercano a 0, esto indica que los valores están distribuidos uniformemente, por lo que no es recomendable realizar clusters, pero se continua el procedimiento para fines educativos.
 
+## 4.2 VAT (Visual Assessment of Cluster Tendency)
+
+```{r}
+fviz_dist(dist(muestra), show_labels = FALSE)
 ```
 
-### das
+### Interpretación
+
+La gráfica VAT se realizó con una muestra de 800 observaciones. En la imagen no se distinguen bloques muy claros, ya que la matriz de distancias se ve bastante uniforme. Esto sugiere que los grupos en los datos no están muy separados. Aun así, es posible que existan clusters, pero que no se distingan fácilmente en esta visualización. Por eso se continuará con el método del codo y el índice de silueta para definir la cantidad de clusters.
+
+# 5. Determinación del número óptimo de clusters
+
+## 5.1 Método del codo
+
+```{r}
+fviz_nbclust(muestra, kmeans, method = "wss")
+```
+
+### Criterio
+
+Se selecciona el valor de k donde la reducción de la WSS comienza a estabilizarse.
+En Iris, el "codo" aparece en k = 3.
+
+## 5.2 Método de la silueta
+
+```{r}
+fviz_nbclust(muestra, kmeans, method = "silhouette")
+```
+
+El valor máximo promedio de silueta también se obtiene en k = 3.
+
+Por lo tanto, se trabajará con:
+
+> k = 3 clusters
+
+
+# 6. Clustering con K-means
+
+## 6.1 Entrenamiento
+
+```{r}
+set.seed(123)
+kmeans_model <- kmeans(muestra, centers = 3, nstart = 25)
+```
+
+## 6.2 Visualización
+
+```{r}
+fviz_cluster(kmeans_model,
+             data = muestra,
+             geom = "point",
+             ellipse.type = "convex",
+             ggtheme = theme_minimal())
+```
+
+# 7. Clustering Jerárquico
+
+```{r}
+dist_matrix <- dist(muestra)
+hc_model <- hclust(dist_matrix, method = "ward.D2")
+```
+
+```{r}
+plot(hc_model, labels = FALSE, hang = -1)
+rect.hclust(hc_model, k = 3, border = 2:4)
+```
+
+Asignación de clusters:
+
+```{r}
+hc_clusters <- cutree(hc_model, k = 3)
+```
