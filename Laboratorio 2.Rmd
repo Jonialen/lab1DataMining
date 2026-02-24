@@ -160,6 +160,6 @@ lo que confirma la robustez de la estructura encontrada.
 
 ```{r}
 df_clean$cluster <- kmeans_model$cluster
-table(df_clean$genre, df_clean$cluster)
+#table(df_clean$genre, df_clean$cluster)
 ```
 
