@@ -85,17 +85,17 @@ Por lo tanto, se trabajará con:
 ## 6.1 Entrenamiento
 
 ```{r}
-k_num <- 5
+k_num <- 3
 
 set.seed(123)
-kmeans_model <- kmeans(df_num, centers = k_num, nstart = 25)
+kmeans_model <- kmeans(df_scaled, centers = k_num, nstart = 25)
 ```
 
 ## 6.2 Visualización
 
 ```{r}
 fviz_cluster(kmeans_model,
-             data = df_num,
+             data = df_scaled,
              geom = "point",
              ellipse.type = "convex",
              ggtheme = theme_minimal())
@@ -104,7 +104,7 @@ fviz_cluster(kmeans_model,
 # 7. Clustering Jerárquico
 
 ```{r}
-dist_matrix <- dist(df_num)
+dist_matrix <- dist(df_scaled)
 hc_model <- hclust(dist_matrix, method = "ward.D2")
 ```
 
@@ -124,7 +124,7 @@ hc_clusters <- cutree(hc_model, k = k_num)
 ## 8.1 Silueta K-means
 
 ```{r}
-sil_kmeans <- silhouette(kmeans_model$cluster, dist(df_num))
+sil_kmeans <- silhouette(kmeans_model$cluster, dist(df_scaled))
 summary(sil_kmeans)
 fviz_silhouette(sil_kmeans)
 mean(sil_kmeans[,3])
@@ -133,7 +133,7 @@ mean(sil_kmeans[,3])
 ## 8.2 Silueta Jerárquico
 
 ```{r}
-sil_hc <- silhouette(hc_clusters, dist(df_num))
+sil_hc <- silhouette(hc_clusters, dist(df_scaled))
 summary(sil_hc)
 fviz_silhouette(sil_hc)
 mean(sil_hc[,3])
