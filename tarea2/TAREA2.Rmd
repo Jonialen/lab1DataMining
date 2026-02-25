@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Tarea 2"
 author: "Jonathan Díaz, Martín Pérez, Karen Toledo"
 output: html_document
 ---
@@ -143,6 +143,36 @@ La SVD también se utiliza en la restauración y análisis de imágenes, con apl
 ## 2.3 UMAP
 
 ### 2.3.1 Descripción teórica
+
+#### a. Explicación del algoritmo y su objetivo principal
+
+UMAP (Uniform Manifold Approximation and Projection) es un algoritmo para reducir dimensional, el cual se basa en fundamentos geométricos y topológicos. Su objetivo principal es preservar la estructura local y global de los datos al proyectarlos a un espacio de menor dimensión. El algoritmo construye un grafo ponderado que representa relaciones de vecindad entre puntos del espacio original. Luego, encuentra una representación en baja dimensión minimizando las diferencias entre las estructuras de los dos espacios (McInnes, Healy & Melville, 2018). 
+
+El proceso consiste en:
+
+ 1. Construir un grafo de vecinos más cercanos (k-nearest neighbors).
+
+ 2. Calcular probabilidades que representan la cercanía entre puntos en el espacio original.
+
+ 3. Buscar una proyección en baja dimensión que conserve esas relaciones mediante la minimización de una función de pérdida basada en divergencia cruzada.
+
+El objetivo principal de UMAP es reducir la dimensionalidad manteniendo la estructura topológica de los datos, lo que permite visualizar los datos en espacios de dos o tres dimensiones.
+
+#### b. Principales características y supuestos
+
+UMAP se basa en tres supuestos teóricos (McInnes et al., 2018):
+
+ - Los datos están distribuidos uniformemente sobre una variedad Riemanniana.
+
+ - La métrica local es aproximadamente constante.
+
+ - La variedad es localmente conexa.
+
+Entre sus parámetros principales se encuentran: 
+
+ - n_neighbors: controla el equilibrio entre estructura local y global.
+
+ - min_dist: determina qué tan compactos se agrupan los puntos en la proyección final. 
 
 ### 2.3.2 Usos y aplicaciones
 
