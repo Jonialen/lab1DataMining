@@ -2,3 +2,6 @@
 
 lab-1_files/
 *.html
+
+.DS_Store
+tarea2/ratings.csv
