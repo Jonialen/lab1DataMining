@@ -5,3 +5,5 @@ lab-1_files/
 
 .DS_Store
 tarea2/ratings.csv
+
+tarea2/*.csv

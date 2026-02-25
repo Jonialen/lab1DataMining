@@ -112,18 +112,123 @@ La SVD también se utiliza en la restauración y análisis de imágenes, con apl
 
 ### 2.1.3 Aplicación práctica
 
-#### a. Selección del conjunto de datos
+#### a. Seleccione un conjunto de datos
 
+Para esta aplicación práctica utilizamos el dataset **MovieLens (ratings.csv)**, que contiene valoraciones de usuarios sobre películas.
 
-#### b. Implementación del algoritmo
+Cada registro incluye:
+- `user_id`
+- `item_id`
+- `rating`
 
+Este dataset puede representarse como una matriz usuario–película, donde:
 
-#### c. Análisis e interpretación de resultados
-
-
+- Filas = usuarios
+- Columnas = películas
+- Valores = ratings
 
 ---
 
+#### b. Implemente el algoritmo usando el conjunto de datos seleccionado
+
+
+```{r}
+library(dplyr)
+library(Matrix)
+library(irlba)
+
+ratings <- read.csv("ratings.csv")
+
+head(ratings)
+```
+
+```{r} 
+# Muestra del dataset
+set.seed(123)
+
+ratings_sample <- ratings %>%
+  sample_n(100000)
+
+dim(ratings_sample)
+```
+
+```{r}
+#creamos una matriz
+ratings_sample$userId <- as.factor(ratings_sample$userId)
+ratings_sample$movieId <- as.factor(ratings_sample$movieId)
+
+rating_matrix <- sparseMatrix(
+  i = as.numeric(ratings_sample$userId),
+  j = as.numeric(ratings_sample$movieId),
+  x = ratings_sample$rating
+)
+
+dim(rating_matrix)
+```
+
+```{r}
+k <- 20
+
+svd_result <- irlba(rating_matrix, nv = k)
+
+svd_result$d
+```
+
+##### Explicación del proceso de SVD truncada
+
+En este paso se aplicó una SVD truncada utilizando la función `irlba()`. Se definió `k = 20`, lo que significa que se conservarán únicamente los 20 factores más importantes. En lugar de descomponer completamente la matriz (lo cual sería computacionalmente costoso), elegimos conservar solo 20 componentes principales.
+
+La SVD descompone la matriz original en:
+$$ X = U S V^T $$ 
+donde:
+- U representa factores asociados a los usuarios,
+- D contiene los valores singulares (importancia de cada factor),
+- V representa factores asociados a las películas.
+
+---
+
+```{r}
+var_explained <- (svd_result$d^2) / sum(svd_result$d^2)
+
+barplot(var_explained,
+        main = "Varianza explicada por factores latentes",
+        xlab = "Factor",
+        ylab = "Proporción",
+        col = "steelblue")
+```
+
+Después de obtener los valores singulares, se calculó la proporción de varianza explicada por cada factor latente. En SVD, los valores singulares indican la importancia de cada componente, al elevarlos al cuadrado y dividirlos entre la suma total, obtenemos cuánta información explica cada factor.
+
+La gráfica permite visualizar esta distribución y evaluar si los 20 factores seleccionados son suficientes para representar adecuadamente el dataset.
+
+La distribución de varianza entre los factores es relativamente uniforme (entre 5% y 6%), lo que indica que la estructura del dataset no está dominada por un único patrón, sino que múltiples factores contribuyen de manera similar a explicar las preferencias de los usuarios.
+
+---
+
+Al graficar las primeras dos componentes, se visualiza cómo se distribuyen los usuarios según sus patrones de preferencia.
+
+Usuarios cercanos en la gráfica tienen comportamientos similares de calificación, mientras que usuarios alejados presentan gustos diferentes. Esta proyección nos permite observar posibles agrupaciones dentro del conjunto de datos.
+
+```{r}
+user_projection <- svd_result$u %*% diag(svd_result$d)
+
+plot(user_projection[,1], user_projection[,2],
+     main = "Usuarios proyectados en 2 factores latentes",
+     xlab = "Factor 1",
+     ylab = "Factor 2",
+     pch = 19,
+     col = "darkred")
+```
+
+##### Interpretación de la proyección de usuarios 
+
+La gráfica muestra la representación de los usuarios en los dos factores latentes más importantes. Se observa una concentración significativa de usuarios cerca de valores similares en el primer factor, mientras que el segundo factor existe mayor dispersión vertical.
+
+Esto sugiere que muchos usuarios comparten patrones generales de preferencia, pero difieren en la intensidad o estilo de sus calificaciones. También se logran identificae algunos puntos aislados, que podrían corresponder a usuarios con comportamientos atípicos.
+
+En conclusión, la proyección confirma que la SVD logró capturar estructura latente dentro del dataset, diferenciando patrones de comportamiento entre usuarios.
+
+---
 ## 2.2 t-SNE
 
 ### 2.2.1 Descripción teórica
@@ -285,6 +390,8 @@ ICA se utiliza en análisis de señales cerebrales (EEG y MEG) para separar señ
 
 # 4. Conclusiones
 
+- En la aplicación de SVD al dataset MovieLens se logró reducir la matriz usuario–película a un conjunto pequeño de factores latentes que conservan la estructura principal de los datos. Además evidenciamos que las preferencias de los usuarios se distribuyen en varios factores, lo que refleja la complejidad del comportamiento de calificación. Además, la proyección en dos dimensiones permitió visualizar diferencias entre usuarios y posibles patrones ocultos.  
+
 ## 4.1 Principales aprendizajes
 
 En general, aprendimos que no existe un algoritmo “mejor” en todos los casos, sino que la elección depende del tipo de datos, del objetivo del análisis y del contexto del problema.  
@@ -296,7 +403,7 @@ Una de las principales dificultades fue comprender las diferencias conceptuales 
 
 ## 4.3 Reflexión final del grupo
 
-Este trabajo nos permitió conectar teoría matemática con aplicaciones reales en minería de datos. Pudimos ver cómo conceptos como independencia, no-gaussianidad, reducción de dimensionalidad y separación de señales tienen impacto directo en problemas prácticos.
+Este trabajo nos permitió encontrar una relación entre teoría matemática con aplicaciones reales en minería de datos. Pudimos ver cómo conceptos como independencia, no-gaussianidad, reducción de dimensionalidad y separación de señales tienen impacto directo en problemas prácticos.
 
 Además, entendimos que el aprendizaje no supervisado es una herramienta muy poderosa cuando no se dispone de etiquetas, pero también requiere mayor criterio para interpretar resultados.
 
