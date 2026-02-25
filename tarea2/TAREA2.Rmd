@@ -39,7 +39,22 @@ Miércoles 25 de febrero, 2026
 
 ## 1.1 Contexto general del aprendizaje no supervisado
 
+El aprendizaje computacional es una de las áreas más importantes en el desarrollo de la inteligencia artificial, ya que permite que los sistemas mejoren su desempeño a partir de la experiencia y los datos disponibles (Cencerrado & Ventura, 2019). El aprendizaje automático ajusta sus modelos en función de patrones observados en los conjuntos de datos.
+
+De acuerdo con Sammut y Webb (2011), el aprendizaje automático estudia algoritmos que mejoran su rendimiento através de la experiencia. Dentro de esta área, el aprendizaje no supervisado se caracteriza por trabajar únicamente con datos de entrada, sin etiquetas o salidas esperadas. El objetivo es descubrir estructuras, relaciones o patrones ocultos en los datos. Por eso en este contexto, algoritmos como SVD, ICA, t-SNE y UMAP son útiles porque permiten reducir dimensionalidad, separar fuentes ocultas o visualizar datos complejos, lo que los convierte en herramientas fundamentales en minería de datos.
+
+---
+
 ## 1.2 Objetivos del trabajo
+
+El objetivo principal de este trabajo es comprender y comparar distintos algoritmos de aprendizaje no supervisado tanto desde el punto de vista teórico y práctico. Se espera:    
+
+1. Estudiar los fundamentos de SVD, ICA, t-SNE y UMAP.
+2. Implementar cada algoritmo utilizando un conjunto de datos real.
+3. Analizar e interpretar los resultados mediante tablas y visualizaciones.
+4. Comparar sus ventajas y limitaciones.
+
+Con esto se espera desarrollar un criterio acerca deluso adecuado de cada método en distintos escenarios de análisis de datos.
 
 ---
 
@@ -264,11 +279,15 @@ Alegre, A. (2013). *La descomposición de valores singulares (DVS): Obtención d
 
 Embree, M. (2019). *Matrix methods for computational modeling and data analytics* (Cap. 6: The singular value decomposition). Virginia Tech.
 
-Pozo Montero, F., & Ripoll Missé, J. (2019). *Descomposición en valores singulares: Introducción y aplicaciones*. FUOC.
+Cencerrado Barraqué, A., & Ventura Royo, C. (2019). *Introducción al aprendizaje computacional*. FUOC.
+
+Sammut, C., & Webb, G. I. (2011). *Encyclopedia of machine learning*. Springer.
 
 Hyvärinen, A., Karhunen, J., & Oja, E. (2001). *Independent component analysis*. John Wiley & Sons.
 
 Hyvärinen, A. (2001). *A short introduction to independent component analysis*.
+
+Pozo Montero, F., & Ripoll Missé, J. (2019). *Descomposición en valores singulares: Introducción y aplicaciones*. FUOC.
 
 Tema 3: Análisis de Componentes Independientes (ICA). (2006).
 
