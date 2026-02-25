@@ -1,0 +1,189 @@
+---
+title: ""
+author: "Jonathan Díaz, Martín Pérez, Karen Toledo"
+output: html_document
+---
+
+<div style="text-align: left; font-size: 16px; line-height: 1.6;">
+
+Universidad del Valle de Guatemala  
+Facultad de Ingeniería  
+Departamento de Ciencias de la Computación  
+CC3074 – Minería de Datos  
+Semestre I – 2026  
+
+</div>
+
+<br><br>
+
+<div style="text-align: center;">
+
+<h2 style="margin-bottom: 5px;">Tarea 2</h2>
+<h3 style="margin-top: 0;">Otros algoritmos de aprendizaje no supervisado</h3>
+
+</div>
+
+<br><br>
+
+**Integrantes del grupo:**  
+- 23837 Jonathan Díaz  
+- 23234 Martín Pérez  
+- 23692 Karen Toledo  
+
+**Fecha:**  
+Miércoles 25 de febrero, 2026  
+
+---
+
+# 1. Introducción
+
+## 1.1 Contexto general del aprendizaje no supervisado
+
+## 1.2 Objetivos del trabajo
+
+---
+
+# 2. Desarrollo
+
+## 2.1 SVD (Singular Value Decomposition)
+
+### 2.1.1 Descripción teórica
+
+#### a. Explicación del algoritmo y su objetivo principal
+
+La **Descomposición en Valores Singulares (SVD)** es una técnica del álgebra lineal que permite descomponer cualquier matriz real $A$ en el producto de tres matrices: $$ A = U S V^T $$ donde $U$ y $V$ son matrices ortogonales y $S$ es una matriz diagonal que contiene los llamados **valores singulares**, los cuales se ordenan de mayor a menor (Pozo Montero & Ripoll Missé, 2019). También puede escribirse como una suma de matrices de rango 1: $$ A = \sum_{j=1}^{r} \sigma_j u_j v_j^T $$ donde $r$ es el rango de la matriz (Pozo Montero & Ripoll Missé, 2019). 
+En otras palabras, la SVD permite separar una matriz en partes más simples que ayudan a entender su estructura. Según Embree (2019), es una de las factorizaciones más importantes porque permite analizar datos y aproximar matrices de forma eficiente. El objetivo principal de la SVD es poder estudiar mejor los datos y, si es necesario, reducir la cantidad de información sin perder lo más importante. 
+
+---
+
+#### b. Principales características y supuestos
+
+Una característica muy importante es que toda matriz real tiene SVD, sin importar si es cuadrada o rectangular (Pozo Montero & Ripoll Missé, 2019). Esto la hace muy general. La construcción de la SVD está relacionada con la matriz $A^T A$, que es simétrica y positiva semidefinida (Embree, 2019). Los valores singulares se obtienen a partir de los valores propios de esta matriz. Otra propiedad interesante es que podemos aproximar la matriz original usando solo los primeros valores singulares: $$ A_\nu = \sum_{j=1}^{\nu} \sigma_j u_j v_j^T $$ El error de esta aproximación depende del siguiente valor singular (Pozo Montero & Ripoll Missé, 2019). Esto significa que si los valores singulares disminuyen rápido, podemos reducir muchos datos sin cometer un error grande. 
+
+---
+
+#### c. Diferencias con PCA
+
+El análisis de componentes principales (PCA) es otro método de reducción de dimensionalidad (Pozo Montero & Ripoll Missé, 2019). La diferencia principal es que PCA trabaja con la matriz de covarianzas, mientras que la SVD se puede aplicar directamente a cualquier matriz. Además, la SVD siempre existe, mientras que PCA depende más del contexto estadístico de los datos. En la práctica, PCA puede calcularse usando SVD, pero conceptualmente no son exactamente lo mismo (Embree, 2019). 
+
+---
+
+### 2.1.2 Usos y aplicaciones
+
+#### a. Usos en análisis de datos
+
+La SVD se usa para:  
+- Reducir dimensionalidad.  
+- Resolver problemas de mínimos cuadrados.  
+- Aproximar matrices por otras de menor rango (Embree, 2019). 
+
+Esto es muy útil cuando trabajamos con grandes cantidades de datos y queremos simplificarlos. 
+
+---
+
+#### b. Áreas de aplicación
+
+##### Compresión de imágenes
+
+Una imagen en escala de grises puede representarse como una matriz. En lugar de guardar todos los valores de la matriz, podemos usar solo algunos valores singulares y así reducir la cantidad de datos necesarios (Pozo Montero & Ripoll Missé, 2019). 
+
+Alegre (2013) explica cómo la SVD se puede usar para comprimir imágenes digitales, reduciendo datos sin perder demasiada calidad visual.
+
+##### Procesamiento de imágenes
+
+La SVD también se utiliza en la restauración y análisis de imágenes, con aplicaciones en áreas como medicina y otras ciencias (Alegre, 2013).
+
+---
+
+### 2.1.3 Aplicación práctica
+
+#### a. Selección del conjunto de datos
+
+
+#### b. Implementación del algoritmo
+
+
+#### c. Análisis e interpretación de resultados
+
+
+
+---
+
+## 2.2 t-SNE
+
+### 2.2.1 Descripción teórica
+
+### 2.2.2 Usos y aplicaciones
+
+### 2.2.3 Aplicación práctica
+
+#### a. Selección del conjunto de datos
+
+#### b. Implementación del algoritmo
+
+#### c. Análisis e interpretación de resultados
+
+---
+
+## 2.3 UMAP
+
+### 2.3.1 Descripción teórica
+
+### 2.3.2 Usos y aplicaciones
+
+### 2.3.3 Aplicación práctica
+
+#### a. Selección del conjunto de datos
+
+#### b. Implementación del algoritmo
+
+#### c. Análisis e interpretación de resultados
+
+---
+
+## 2.4 ICA
+
+### 2.4.1 Descripción teórica
+
+### 2.4.2 Usos y aplicaciones
+
+### 2.4.3 Aplicación práctica
+
+#### a. Selección del conjunto de datos
+
+#### b. Implementación del algoritmo
+
+#### c. Análisis e interpretación de resultados
+
+---
+
+# 3. Comparación general
+
+## 3.1 Comparación entre algoritmos
+
+## 3.2 Ventajas y limitaciones
+
+---
+
+# 4. Conclusiones
+
+## 4.1 Principales aprendizajes
+
+## 4.2 Dificultades encontradas
+
+## 4.3 Reflexión final del grupo
+
+---
+
+# 5. Referencias
+
+Alegre, A. (2013). *La descomposición de valores singulares (DVS): Obtención de la DVS y su aplicación al procesamiento de imágenes digitales*. Universidad Nacional de La Matanza.
+
+Embree, M. (2019). *Matrix methods for computational modeling and data analytics* (Cap. 6: The singular value decomposition). Virginia Tech.
+
+Pozo Montero, F., & Ripoll Missé, J. (2019). *Descomposición en valores singulares: Introducción y aplicaciones*. FUOC.
+
+---
+
+# 6. Código fuente utilizado
+
