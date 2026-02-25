@@ -141,11 +141,84 @@ La SVD también se utiliza en la restauración y análisis de imágenes, con apl
 
 ---
 
-## 2.4 ICA
+## 2.4 ICA (Análisis de Componentes Independientes)
 
-### 2.4.1 Descripción teórica
+### Descripción teórica
 
-### 2.4.2 Usos y aplicaciones
+#### a. Explicación del algoritmo y su objetivo principal
+
+El **Análisis de Componentes Independientes (ICA)** es una técnica multivariada no supervisada que busca separar señales originales que han sido mezcladas linealmente. La idea principal es que lo que observamos es una combinación de varias señales independientes que no podemos ver directamente (Hyvärinen, Karhunen & Oja, 2001).
+
+El modelo matemático básico de ICA se expresa como:
+
+$$
+X = AS
+$$
+
+donde:
+
+- $X$ es el vector de señales observadas,
+- $A$ es la matriz de mezcla (desconocida),
+- $S$ es el vector de señales originales o **componentes independientes** (Hyvärinen et al., 2001).
+
+El objetivo del algoritmo es estimar tanto la matriz de mezcla como las señales originales, utilizando únicamente la información contenida en las señales observadas.
+
+Este problema es conocido como **separación ciega de fuentes** (blind source separation), y un ejemplo clásico es el "cocktail party problem", donde se intenta separar varias voces grabadas por diferentes micrófonos en un mismo ambiente (Hyvärinen et al., 2001).
+
+---
+
+#### b. Principales características y supuestos
+
+Para que el modelo ICA pueda estimarse correctamente, se deben cumplir ciertos supuestos:
+
+- Las señales originales deben ser **estadísticamente independientes**.
+- Las señales deben ser **no gaussianas**.
+- Generalmente se asume que el número de fuentes es igual al número de señales observadas (Hyvärinen, 2001).
+
+Una idea importante es que ICA va más allá de la simple incorrelación, pues busca independencia estadística completa, no solo que la covarianza sea cero (Tema 3, 2006).
+
+Otra característica relevante es que la solución tiene ciertas ambigüedades porque no puede determinar el orden exacto de las componentes.
+
+---
+
+#### c. Diferencias con PCA
+
+PCA busca encontrar direcciones que maximicen la varianza de los datos, utilizando únicamente información de covarianza (Hyvärinen, 2001). En cambio, ICA busca encontrar componentes que sean estadísticamente independientes.
+
+PCA no puede recuperar las señales originales cuando estas han sido mezcladas. ICA utiliza información de orden superior, como la no-gaussianidad, para poder separar correctamente las fuentes (Hyvärinen, 2001).
+
+En particular:
+
+- Una distribución gaussiana está completamente determinada por su covarianza.
+- Pero las distribuciones no gaussianas contienen información adicional que ICA puede aprovechar.
+
+---
+
+### Usos y aplicaciones
+
+#### a. Usos en análisis de datos
+
+ICA se utiliza principalmente para:
+
+- Separación ciega de fuentes.
+- Análisis de señales biomédicas (como EEG).
+- Procesamiento de audio.
+- Telecomunicaciones.
+- Extracción de características en imágenes (Hyvärinen et al., 2001).
+
+Por eso se vuelve especialmente útil cuando se sospecha que los datos observados son combinaciones de factores ocultos independientes.
+
+---
+
+#### b. Áreas de aplicación
+
+##### Separación de señales
+
+Uno de los ejemplos más conocidos es la separación de voces grabadas simultáneamente en un mismo espacio. ICA permite recuperar cada señal individual a partir de mezclas observadas.
+
+##### Procesamiento de señales biomédicas
+
+ICA se utiliza en análisis de señales cerebrales (EEG y MEG) para separar señales neuronales reales de artefactos como movimiento ocular o ruido (Hyvärinen et al., 2001).
 
 ### 2.4.3 Aplicación práctica
 
@@ -169,9 +242,19 @@ La SVD también se utiliza en la restauración y análisis de imágenes, con apl
 
 ## 4.1 Principales aprendizajes
 
+En general, aprendimos que no existe un algoritmo “mejor” en todos los casos, sino que la elección depende del tipo de datos, del objetivo del análisis y del contexto del problema.  
+
 ## 4.2 Dificultades encontradas
 
+Una de las principales dificultades fue comprender las diferencias conceptuales entre métodos que, a primera vista, parecen similares. Por ejemplo, diferenciar claramente entre incorrelación (PCA) e independencia estadística (ICA) requirió revisar varias veces la teoría.  
+
+
 ## 4.3 Reflexión final del grupo
+
+Este trabajo nos permitió conectar teoría matemática con aplicaciones reales en minería de datos. Pudimos ver cómo conceptos como independencia, no-gaussianidad, reducción de dimensionalidad y separación de señales tienen impacto directo en problemas prácticos.
+
+Además, entendimos que el aprendizaje no supervisado es una herramienta muy poderosa cuando no se dispone de etiquetas, pero también requiere mayor criterio para interpretar resultados.
+
 
 ---
 
@@ -182,6 +265,12 @@ Alegre, A. (2013). *La descomposición de valores singulares (DVS): Obtención d
 Embree, M. (2019). *Matrix methods for computational modeling and data analytics* (Cap. 6: The singular value decomposition). Virginia Tech.
 
 Pozo Montero, F., & Ripoll Missé, J. (2019). *Descomposición en valores singulares: Introducción y aplicaciones*. FUOC.
+
+Hyvärinen, A., Karhunen, J., & Oja, E. (2001). *Independent component analysis*. John Wiley & Sons.
+
+Hyvärinen, A. (2001). *A short introduction to independent component analysis*.
+
+Tema 3: Análisis de Componentes Independientes (ICA). (2006).
 
 ---
 
