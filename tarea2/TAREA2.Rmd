@@ -560,6 +560,10 @@ Hyvärinen, A. (2001). *A short introduction to independent component analysis*.
 
 Pozo Montero, F., & Ripoll Missé, J. (2019). *Descomposición en valores singulares: Introducción y aplicaciones*. FUOC.
 
+McInnes, Leland, John Healy, and James Melville. *Umap: Uniform manifold approximation and projection for dimension reduction.* arXiv preprint arXiv:1802.03426 (2018).
+
+Jolliffe, Ian T. *Principal component analysis: a beginner's guide—I. Introduction and application.* Weather 45.10 (1990): 375-382.
+
 Tema 3: Análisis de Componentes Independientes (ICA). (2006).
 
 ---
