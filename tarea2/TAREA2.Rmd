@@ -287,6 +287,14 @@ La diferencia principal con PCA es que el alboritmo UMAP es no lineal. Mientras 
 
 #### a. Usos en análisis de datos
 
+UMAP se utiliza principalmente para:
+
+- Visualización de datos de alta dimensión en 2D o 3D.
+
+- Reducción de dimensionalidad previa a tareas de clasificación o clustering.
+
+- Exploración de estructuras latentes en grandes volúmenes de datos (McInnes et al., 2018).
+
 ### 2.3.3 Aplicación práctica
 
 #### a. Selección del conjunto de datos
