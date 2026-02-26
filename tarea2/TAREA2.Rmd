@@ -299,9 +299,129 @@ UMAP se utiliza principalmente para:
 
 #### a. Selección del conjunto de datos
 
+Para esta aplicación práctica utilizamos el dataset **Breast Cancer Wisconsin (Diagnostic) Data Set (breastcancer.csv)**, que contiene características de los núcleos celulares, y si estos son malignos o benignos.
+
+Cada registro incluye:
+- `ID`
+- `Diagnostico`
+- `Radio`
+- `Textura`
+- `Perímetro`
+- `Área`
+- `Suavidad`
+- `Compacidad`
+- `Concavidad`
+- `Puntos de concavidad`
+- `Simetría`
+- `Dimensión de fractal`
+
+---
+
 #### b. Implementación del algoritmo
 
+```{r}
+# Librerías necesarias
+library(dplyr)
+library(ggplot2)
+library(umap)
+
+breast_cancer <- read.csv("breastcancer.csv")
+
+#names(breast_cancer)
+head(breast_cancer)
+```
+
+```{r}
+# Eliminamos columnas que no aportan a la reducción de dimensionalidad
+breast_cancer_clean <- breast_cancer %>%
+  select(-id, -X)
+
+# Convertimos diagnosis en factor
+breast_cancer_clean$diagnosis <- as.factor(breast_cancer_clean$diagnosis)
+
+# Separar variables predictoras y variable objetivo
+X_data <- breast_cancer_clean %>%
+  select(-diagnosis)
+
+y_label <- breast_cancer_clean$diagnosis
+
+dim(X_data)
+```
+
+```{r}
+# Estandarización de los datos
+X_scaled <- scale(X_data)
+
+summary(X_scaled[,1:5])
+```
+
+```{r}
+# Definimos parámetros de UMAP
+umap_config <- umap.defaults
+umap_config$n_neighbors <- 15
+umap_config$min_dist <- 0.1
+umap_config$metric <- "euclidean"
+
+set.seed(123)
+
+umap_result <- umap(X_scaled, config = umap_config)
+
+str(umap_result)
+```
+
+##### Explicación del proceso de UMAP
+
+En este paso se aplicó el algoritmo UMAP al conjunto de datos de cáncer de mama.
+
+Primero se eliminaron las variables no numéricas o identificadores (id, X). Luego, las variables numéricas fueron estandarizadas, ya que UMAP se basa en distancias y es sensible a la escala de los datos.
+
+Posteriormente se definieron los parámetros principales:
+
+ - n_neighbors = 15: controla cuántos vecinos cercanos se consideran para construir el grafo local.
+
+ - min_dist = 0.1: determina qué tan compactos pueden agruparse los puntos en la proyección final.
+
+ - metric = "euclidean": métrica de distancia utilizada.
+
+UMAP construye un grafo de vecinos más cercanos en el espacio original y luego optimiza una representación en baja dimensión preservando esa estructura topológica.
+
+```{r}
+# Creamos dataframe con la proyección
+umap_df <- data.frame(
+  UMAP1 = umap_result$layout[,1],
+  UMAP2 = umap_result$layout[,2],
+  diagnosis = y_label
+)
+
+head(umap_df)
+```
+
+```{r}
+# Visualización de la proyección
+ggplot(umap_df, aes(x = UMAP1, y = UMAP2, color = diagnosis)) +
+  geom_point(size = 2, alpha = 0.7) +
+  labs(title = "Proyección UMAP - Breast Cancer Dataset",
+       x = "UMAP 1",
+       y = "UMAP 2",
+       color = "Diagnóstico") +
+  theme_minimal()
+```
+
 #### c. Análisis e interpretación de resultados
+
+##### Interpretación de la proyección UMAP
+
+La gráfica muestra la representación de los pacientes en un espacio bidimensional generado por UMAP.
+
+Cada punto corresponde a una observación del dataset, y el color indica el diagnóstico:
+
+ - M: Tumor maligno
+
+ - B: Tumor benigno
+
+Se observa una clara separación entre ambos grupos, lo que indica que las variables morfológicas del tumor contienen suficiente información estructural para distinguir entre diagnósticos.
+
+Los puntos cercanos representan pacientes con características similares, mientras que los puntos alejados presentan diferencias morfológicas más marcadas.
 
 ---
 
