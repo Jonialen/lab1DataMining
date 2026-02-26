@@ -279,7 +279,13 @@ Entre sus parámetros principales se encuentran:
 
  - min_dist: determina qué tan compactos se agrupan los puntos en la proyección final. 
 
+#### c. Diferencias con PCA
+
+La diferencia principal con PCA es que el alboritmo UMAP es no lineal. Mientras que PCA busca la varianza máxima mediante transformaciones lineales. UMAP intenta preservar la estructura geométrica del conjunto de datos, incluso cuando esta estructura es compleja o curva (McInnes et al., 2018). 
+
 ### 2.3.2 Usos y aplicaciones
+
+#### a. Usos en análisis de datos
 
 ### 2.3.3 Aplicación práctica
 
