@@ -529,3 +529,154 @@ Estas reglas revelan oportunidades: **producciones dramáticas con presupuesto m
 
 ---
 
+# 3. Análisis de Componentes Principales (PCA)
+
+## 3.1 Evaluación de variables categóricas
+
+Para el PCA se utilizan exclusivamente variables numéricas. Las variables categóricas (`genres`, `originalLanguage`, `director`, `actors`) no se incluyen directamente ya que la codificación one-hot generaría cientos de dimensiones adicionales que inflarían la complejidad sin aportar claridad interpretativa. Se incorporan en cambio sus **derivados numéricos**: `genresAmount`, `productionCoAmount`, `productionCountriesAmount`, `actorsAmount`, `castWomenAmount`, `castMenAmount`.
+
+```{r vars_pca}
+vars_pca <- c("budget", "revenue", "runtime", "popularity",
+              "voteAvg", "voteCount", "genresAmount",
+              "productionCoAmount", "productionCountriesAmount",
+              "actorsAmount", "castWomenAmount", "castMenAmount")
+
+df_pca_vars <- df_clean[, vars_pca]
+df_pca_vars <- as.data.frame(lapply(df_pca_vars, as.numeric))
+df_pca_vars <- na.omit(df_pca_vars)
+
+cat("Observaciones para PCA:", nrow(df_pca_vars),
+    "| Variables:", ncol(df_pca_vars))
+```
+
+### Matriz de correlaciones
+
+```{r matriz_cor, fig.height=6}
+cor_matrix <- cor(df_pca_vars)
+
+# Mapa de calor de correlaciones
+cor_df <- as.data.frame(as.table(cor_matrix))
+ggplot(cor_df, aes(Var1, Var2, fill = Freq)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "#2166AC", high = "#D6604D",
+                       mid = "white", midpoint = 0,
+                       limit = c(-1, 1), name = "Correlación") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Matriz de correlaciones – Variables para PCA",
+       x = "", y = "")
+```
+
+## 3.2 Evaluación de viabilidad
+
+### Índice KMO (Kaiser-Meyer-Olkin)
+
+```{r kmo}
+kmo_result <- KMO(cor_matrix)
+print(kmo_result)
+```
+
+**Interpretación KMO:**
+
+| Rango | Interpretación |
+|---|---|
+| > 0.9 | Maravilloso |
+| 0.8 – 0.9 | Meritorio |
+| 0.7 – 0.8 | Mediano |
+| 0.6 – 0.7 | Mediocre |
+| 0.5 – 0.6 | Miserable |
+| < 0.5 | Inaceptable (no apto para PCA) |
+
+### Test de Esfericidad de Bartlett
+
+```{r bartlett}
+bartlett_result <- cortest.bartlett(cor_matrix, n = nrow(df_pca_vars))
+cat("Chi-cuadrado:", round(bartlett_result$chisq, 2),
+    "\np-valor:", bartlett_result$p.value)
+```
+
+**Interpretación:** Un p-valor < 0.05 permite rechazar H₀ (la matriz de correlaciones es la identidad), confirmando que existen correlaciones significativas entre variables y que el PCA es estadísticamente apropiado.
+
+## 3.3 Aplicación de PCA
+
+```{r pca}
+df_pca_scaled <- scale(df_pca_vars)
+pca_result    <- prcomp(df_pca_scaled, center = FALSE, scale. = FALSE)
+summary(pca_result)
+```
+
+### Varianza explicada por componente
+
+```{r varianza_pca}
+fviz_eig(pca_result,
+         addlabels = TRUE,
+         ylim      = c(0, 70),
+         main      = "Varianza explicada por componente principal")
+```
+
+### Número de componentes a retener
+
+```{r n_comp}
+var_acum <- summary(pca_result)$importance[3, ]
+n_comp   <- which(var_acum >= 0.75)[1]
+cat("Componentes para explicar ≥ 75% de la varianza:", n_comp)
+```
+
+Se retienen los primeros **`r n_comp` componentes**, siguiendo el criterio de varianza acumulada ≥ 75%. Esto confirma que la mayor parte de la información del dataset puede representarse con una fracción reducida de dimensiones.
+
+### Contribución de variables a los componentes
+
+```{r biplot_vars, fig.height=6}
+fviz_pca_var(pca_result,
+             col.var       = "contrib",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel         = TRUE,
+             title         = "PCA – Contribución de variables (PC1 vs PC2)")
+```
+
+### Cargas (Loadings) de los primeros componentes
+
+```{r loadings}
+n_mostrar  <- min(n_comp, 4)
+loadings_df <- as.data.frame(round(pca_result$rotation[, 1:n_mostrar], 3))
+kable(loadings_df,
+      caption = paste("Cargas de los primeros", n_mostrar, "componentes principales"))
+```
+
+### Proyección de películas en el espacio PCA
+
+```{r pca_ind, fig.height=5}
+set.seed(321)
+pca_vis_idx <- sample(nrow(df_pca_scaled), 2000)
+
+# Se usa ggplot directamente para evitar el desajuste de longitud
+# entre col.ind (muestra) y pca_result (dataset completo)
+pca_plot_df <- data.frame(
+  PC1     = pca_result$x[pca_vis_idx, 1],
+  PC2     = pca_result$x[pca_vis_idx, 2],
+  cluster = as.factor(df_clean$cluster[pca_vis_idx])
+)
+
+ggplot(pca_plot_df, aes(PC1, PC2, color = cluster)) +
+  geom_point(alpha = 0.45, size = 0.8) +
+  stat_ellipse(aes(group = cluster), linewidth = 0.8) +
+  scale_color_brewer(palette = "Set1") +
+  labs(title  = "Proyección PCA – Coloreado por cluster K-means (n = 2,000)",
+       color  = "Cluster",
+       x      = paste0("PC1 (", round(summary(pca_result)$importance[2,1]*100, 1), "%)"),
+       y      = paste0("PC2 (", round(summary(pca_result)$importance[2,2]*100, 1), "%)")) +
+  theme_minimal()
+```
+
+## 3.4 Interpretación de componentes
+
+**PC1 – Escala comercial:** `budget`, `revenue` y `voteCount` tienen las cargas más altas. Este componente resume el tamaño y alcance comercial de la película. Valores altos en PC1 corresponden a los blockbusters del Cluster 3.
+
+**PC2 – Elenco y complejidad de producción:** Variables como `actorsAmount`, `castWomenAmount`, `castMenAmount` y `productionCoAmount` definen este componente. Captura la complejidad organizacional del proyecto, independientemente de su presupuesto.
+
+**PC3 – Calidad y diversidad narrativa:** `voteAvg`, `genresAmount` y `popularity` contribuyen a este componente, reflejando la percepción de calidad y el alcance de la audiencia en relación al tamaño del elenco.
+
+Este análisis revela que el **éxito comercial** (PC1) y la **calidad percibida** (PC3) son dimensiones relativamente independientes, lo que abre la puerta a estrategias de producción eficientes.
+
+---
+
