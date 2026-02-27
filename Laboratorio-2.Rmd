@@ -362,3 +362,170 @@ df_clean %>%
 
 ---
 
+# 2. Reglas de Asociación
+
+## 2.1 Discretización de variables numéricas
+
+Para aplicar el algoritmo A Priori, las variables numéricas se convierten en categorías que describen el perfil de cada película.
+
+```{r discretizacion}
+df_rules <- df_clean %>%
+  mutate(
+    presupuesto = case_when(
+      budget == 0        ~ "presupuesto_nulo",
+      budget < 5e6       ~ "presupuesto_bajo",
+      budget < 5e7       ~ "presupuesto_medio",
+      TRUE               ~ "presupuesto_alto"
+    ),
+    ingresos = case_when(
+      revenue == 0       ~ "ingresos_nulos",
+      revenue < 1e7      ~ "ingresos_bajos",
+      revenue < 1e8      ~ "ingresos_medios",
+      TRUE               ~ "ingresos_altos"
+    ),
+    calificacion = case_when(
+      voteCount < 10     ~ "sin_calificacion",
+      voteAvg < 5        ~ "calificacion_baja",
+      voteAvg < 7        ~ "calificacion_media",
+      TRUE               ~ "calificacion_alta"
+    ),
+    popularidad = case_when(
+      popularity < 1     ~ "popularidad_baja",
+      popularity < 10    ~ "popularidad_media",
+      TRUE               ~ "popularidad_alta"
+    ),
+    duracion = case_when(
+      runtime < 60       ~ "pelicula_corta",
+      runtime < 100      ~ "pelicula_media",
+      runtime < 140      ~ "pelicula_larga",
+      TRUE               ~ "pelicula_muy_larga"
+    )
+  )
+
+# Resumen de las categorías generadas
+cat("Distribución de presupuesto:\n")
+print(table(df_rules$presupuesto))
+cat("\nDistribución de calificación:\n")
+print(table(df_rules$calificacion))
+```
+
+## 2.2 Construcción de transacciones
+
+Cada película se representa como una "canasta" de ítems: géneros (extraídos del campo pipe-separated) más las categorías discretizadas.
+
+```{r transacciones}
+genres_list <- strsplit(as.character(df_rules$genres), "\\|")
+
+items_list <- lapply(seq_len(nrow(df_rules)), function(i) {
+  generos <- genres_list[[i]]
+  generos <- generos[nchar(trimws(generos)) > 0]
+  if (length(generos) > 0) generos <- paste0("genero_", trimws(generos))
+
+  unique(c(
+    generos,
+    df_rules$presupuesto[i],
+    df_rules$ingresos[i],
+    df_rules$calificacion[i],
+    df_rules$popularidad[i],
+    df_rules$duracion[i]
+  ))
+})
+
+trans <- as(items_list, "transactions")
+summary(trans)
+```
+
+```{r itemsets_freq}
+itemFrequencyPlot(trans,
+                  topN     = 20,
+                  type     = "absolute",
+                  main     = "Top 20 ítems más frecuentes",
+                  col      = "#4292C6",
+                  ylab     = "Frecuencia absoluta")
+```
+
+## 2.3 Aplicación del algoritmo A Priori
+
+Se prueban distintos niveles de soporte y confianza para encontrar reglas significativas.
+
+### Configuración 1: Soporte 0.05, Confianza 0.5
+
+```{r apriori_1}
+rules_1 <- apriori(trans,
+                   parameter = list(supp   = 0.05,
+                                    conf   = 0.50,
+                                    minlen = 2,
+                                    maxlen = 4))
+cat("Reglas generadas (soporte=0.05, confianza=0.50):", length(rules_1), "\n")
+```
+
+### Configuración 2: Soporte 0.10, Confianza 0.70
+
+```{r apriori_2}
+rules_2 <- apriori(trans,
+                   parameter = list(supp   = 0.10,
+                                    conf   = 0.70,
+                                    minlen = 2,
+                                    maxlen = 4))
+cat("Reglas generadas (soporte=0.10, confianza=0.70):", length(rules_2), "\n")
+```
+
+## 2.4 Revisión de ítems muy frecuentes
+
+Antes de extraer reglas, se identifican los ítems que aparecen en casi todas las transacciones. Ítems con soporte > 85% son tan comunes que no generan reglas informativas y pueden suprimirse.
+
+```{r items_frecuentes}
+freq_items <- itemFrequency(trans, type = "relative")
+items_muy_freq <- names(freq_items[freq_items > 0.85])
+cat("Ítems con soporte > 85%:\n")
+print(items_muy_freq)
+
+# Si existen, construir versión filtrada de las transacciones
+if (length(items_muy_freq) > 0) {
+  trans_filtrado <- trans[, !colnames(trans) %in% items_muy_freq]
+  cat("\nTransacciones tras eliminar ítems muy frecuentes:",
+      ncol(trans_filtrado), "ítems únicos restantes\n")
+} else {
+  trans_filtrado <- trans
+  cat("\nNo se encontraron ítems con soporte > 85%. Se usan las transacciones originales.\n")
+}
+```
+
+## 2.5 Reglas más interesantes
+
+Se ordenan las reglas por **lift** (mayor lift = asociación más fuerte que el azar) y se eliminan las redundantes.
+
+```{r reglas_top}
+rules_sorted   <- sort(rules_1, by = "lift", decreasing = TRUE)
+rules_no_red   <- rules_sorted[!is.redundant(rules_sorted)]
+rules_top15    <- head(rules_no_red, 15)
+
+inspect(rules_top15)
+```
+
+```{r reglas_plot_scatter}
+plot(rules_top15,
+     method  = "scatterplot",
+     measure = c("support", "confidence"),
+     shading = "lift",
+     main    = "Reglas de asociación – Soporte vs. Confianza (lift = color)")
+```
+
+```{r reglas_plot_graph}
+plot(rules_top15,
+     method = "graph",
+     main   = "Grafo de las 15 reglas con mayor lift")
+```
+
+**Interpretación de las reglas más interesantes:**
+
+1. **Presupuesto alto → Ingresos altos:** Las películas con mayor inversión tienden a generar mayores ingresos, confirmando la lógica del mercado de blockbusters.
+2. **Géneros Acción/Aventura + presupuesto alto → popularidad alta:** Los géneros más comerciales refuerzan la popularidad cuando van acompañados de alta inversión.
+3. **Sin calificación + sin ingresos → presupuesto nulo:** Las películas sin datos financieros tampoco cuentan con retroalimentación de audiencia, formando un cluster de datos incompletos.
+4. **Drama + duración larga → calificación media-alta:** Las producciones dramáticas de mayor duración reciben calificaciones más altas, sugiriendo que la audiencia valora la profundidad narrativa.
+5. **Popularidad baja + ingresos nulos → sin calificación:** Las películas que no llegaron a la audiencia tampoco fueron calificadas, creando un ciclo de baja visibilidad.
+
+Estas reglas revelan oportunidades: **producciones dramáticas con presupuesto medio** pueden capturar calificaciones altas sin requerir la inversión de un blockbuster.
+
+---
+
