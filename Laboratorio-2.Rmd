@@ -94,8 +94,7 @@ El estadístico obtenido indica la distribución de los datos. Dado que el datas
 ### 1.2.2 VAT (Visual Assessment of Cluster Tendency)
 
 ```{r vat}
-fviz_dist(dist(muestra), show_labels = FALSE,
-          main = "VAT – Matriz de distancias (muestra n=1000)")
+fviz_dist(dist(muestra), show_labels = FALSE)
 ```
 
 **Interpretación:**
@@ -109,15 +108,13 @@ La gráfica VAT se realizó con una muestra de 1,000 observaciones. Los bloques 
 ### 1.3.1 Método del codo
 
 ```{r codo}
-fviz_nbclust(muestra, kmeans, method = "wss",
-             main = "Método del Codo – WSS por número de clusters")
+fviz_nbclust(muestra, kmeans, method = "wss")
 ```
 
 ### 1.3.2 Método de la silueta
 
 ```{r silueta_opt}
-fviz_nbclust(muestra, kmeans, method = "silhouette",
-             main = "Método de la Silueta – Score promedio por k")
+fviz_nbclust(muestra, kmeans, method = "silhouette")
 ```
 
 **Criterio:** Se selecciona **k = 3** como número de grupos, punto donde la reducción de la WSS se estabiliza y el índice de silueta muestra un valor aceptable. Este número también resulta interpretable en términos de negocio (películas independientes, de presupuesto medio, y blockbusters).
@@ -262,7 +259,7 @@ kable(resumen_clusters,
 df_long <- df_clean %>%
   select(cluster, budget, revenue, popularity, voteAvg, voteCount, runtime) %>%
   pivot_longer(-cluster, names_to = "variable", values_to = "valor") %>%
-  mutate(variable = recode(variable,
+  mutate(variable = dplyr::recode(variable,
     budget     = "Presupuesto",
     revenue    = "Ingresos",
     popularity = "Popularidad",
