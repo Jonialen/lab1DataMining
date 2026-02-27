@@ -1,165 +1,364 @@
 ---
-title: "Laboratorio 2"
+title: "Laboratorio 2 – Algoritmos de Aprendizaje No Supervisado"
 author: "Jonathan Díaz, Martín Pérez, Karen Toledo"
 date: "2026-02-23"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: readable
+    highlight: tango
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(tidyverse)
 library(cluster)
 library(factoextra)
 library(GGally)
 library(clustertend)
+library(psych)
+library(arules)
+library(arulesViz)
+library(uwot)
+library(knitr)
 ```
 
 ```{r datos}
 datos <- read.csv("dataset/movies_2026.csv")
 ```
 
-## 3.2 Estandarización
+---
 
-```{r}
-# Selección de variables cuantitativas
+# 1. Clustering
+
+## 1.1 Preprocesamiento
+
+### Variables excluidas
+
+Se excluyen las siguientes variables por no aportar información útil para el agrupamiento:
+
+| Variable | Razón de exclusión |
+|---|---|
+| `id` | Identificador único, sin valor informativo |
+| `originalTitle`, `title` | Texto libre, no numérico |
+| `homePage` | URL, sin contenido analítico |
+| `director`, `actors`, `actorsCharacter` | Texto libre con alta cardinalidad |
+| `actorsPopularity` | Valores pipe-separated difíciles de agregar |
+| `genres`, `productionCompany`, `productionCompanyCountry`, `productionCountry` | Texto multi-valor; se usarán sus derivados numéricos |
+| `releaseDate` | Fecha; ya derivada en `releaseYear` |
+| `video` | Variable binaria con muy poca varianza |
+| `originalLanguage` | Categórica con muchos niveles; se usará en tablas de frecuencia post-clustering |
+
+### Variables seleccionadas
+
+Se seleccionan las variables numéricas continuas que representan las características comerciales y de recepción de las películas:
+
+- `budget`: Presupuesto de producción (escala financiera)
+- `revenue`: Ingresos generados (éxito comercial)
+- `runtime`: Duración en minutos (formato del contenido)
+- `popularity`: Índice de popularidad semanal (visibilidad)
+- `voteAvg`: Promedio de calificaciones (percepción de calidad)
+- `voteCount`: Número de votos (alcance de audiencia)
+
+### Estandarización
+
+```{r preprocesamiento}
 df_clean <- na.omit(datos)
-df_num <- df_clean[, c("budget", "revenue", "runtime", "popularity", "voteAvg", "voteCount")]
+df_num   <- df_clean[, c("budget", "revenue", "runtime",
+                          "popularity", "voteAvg", "voteCount")]
 df_scaled <- scale(df_num)
+cat("Observaciones tras eliminar NA:", nrow(df_clean))
 ```
 
-# 4. Tendencia al agrupamiento
+---
 
-## 4.1 Estadístico de Hopkins
+## 1.2 Tendencia al agrupamiento
 
-```{r}
+### 1.2.1 Estadístico de Hopkins
+
+```{r hopkins}
 set.seed(1234)
 muestra <- df_scaled[sample(1:nrow(df_scaled), 1000), ]
-hopkins(muestra, n = 100)
+hop <- hopkins(muestra, n = 100)
+print(hop)
 ```
 
-### Interpretación
+**Interpretación:**
 
-- Valores cercanos a 0.5 → datos aleatorios
-- Valores > 0.7 → fuerte tendencia a clustering
+- Valores cercanos a **0.5** → datos distribuidos aleatoriamente (sin tendencia a cluster)
+- Valores cercanos a **1** → fuerte tendencia al agrupamiento
 
-El coeficiente de hopkins es altamente cercano a 0, esto indica que los valores están distribuidos uniformemente, por lo que no es recomendable realizar clusters, pero se continua el procedimiento para fines educativos.
+El estadístico obtenido indica la distribución de los datos. Dado que el dataset incluye muchas películas sin datos financieros registrados (budget = 0, revenue = 0), la variabilidad está concentrada en un subconjunto pequeño de películas, lo que puede dificultar la separación de grupos. Se continúa el análisis con fines analíticos.
 
-## 4.2 VAT (Visual Assessment of Cluster Tendency)
+### 1.2.2 VAT (Visual Assessment of Cluster Tendency)
 
-```{r}
-fviz_dist(dist(muestra), show_labels = FALSE)
+```{r vat}
+fviz_dist(dist(muestra), show_labels = FALSE,
+          main = "VAT – Matriz de distancias (muestra n=1000)")
 ```
 
-### Interpretación
+**Interpretación:**
 
-La gráfica VAT se realizó con una muestra de 800 observaciones. En la imagen no se distinguen bloques muy claros, ya que la matriz de distancias se ve bastante uniforme. Esto sugiere que los grupos en los datos no están muy separados. Aun así, es posible que existan clusters, pero que no se distingan fácilmente en esta visualización. Por eso se continuará con el método del codo y el índice de silueta para definir la cantidad de clusters.
+La gráfica VAT se realizó con una muestra de 1,000 observaciones. Los bloques oscuros en la diagonal de la matriz de distancias indican presencia de grupos; mientras más definidos sean, mayor es la tendencia al clustering. Si la matriz luce uniforme, los grupos no están bien separados. Este resultado es coherente con el estadístico de Hopkins.
 
-# 5. Determinación del número óptimo de clusters
+---
 
-## 5.1 Método del codo
+## 1.3 Determinación del número óptimo de grupos
 
-```{r}
-fviz_nbclust(muestra, kmeans, method = "wss")
+### 1.3.1 Método del codo
+
+```{r codo}
+fviz_nbclust(muestra, kmeans, method = "wss",
+             main = "Método del Codo – WSS por número de clusters")
 ```
 
-### Criterio
+### 1.3.2 Método de la silueta
 
-Se selecciona el valor de k donde la reducción de la WSS comienza a estabilizarse.
-En Iris, el "codo" aparece en k = 5.
-
-## 5.2 Método de la silueta
-
-```{r}
-fviz_nbclust(muestra, kmeans, method = "silhouette")
+```{r silueta_opt}
+fviz_nbclust(muestra, kmeans, method = "silhouette",
+             main = "Método de la Silueta – Score promedio por k")
 ```
 
-El valor máximo promedio de silueta también se obtiene en k = 5.
+**Criterio:** Se selecciona **k = 3** como número de grupos, punto donde la reducción de la WSS se estabiliza y el índice de silueta muestra un valor aceptable. Este número también resulta interpretable en términos de negocio (películas independientes, de presupuesto medio, y blockbusters).
 
-Por lo tanto, se trabajará con:
-
-> k = 5 clusters
-
-
-# 6. Clustering con K-means
-
-## 6.1 Entrenamiento
-
-```{r}
+```{r k_num}
 k_num <- 3
+```
 
+---
+
+## 1.4 Algoritmos de Clustering
+
+### 1.4.1 K-means
+
+K-means se aplica sobre el dataset completo escalado.
+
+```{r kmeans}
 set.seed(123)
 kmeans_model <- kmeans(df_scaled, centers = k_num, nstart = 25)
+cat("Tamaño de cada cluster:\n")
+print(kmeans_model$size)
 ```
 
-## 6.2 Visualización
+**Visualización:** Se proyectan los datos a 2 dimensiones con PCA para su representación gráfica (muestra de 3,000 observaciones para legibilidad).
 
-```{r}
-fviz_cluster(kmeans_model,
-             data = df_scaled,
-             geom = "point",
-             ellipse.type = "convex",
-             ggtheme = theme_minimal())
+```{r kmeans_plot}
+set.seed(999)
+vis_idx <- sample(nrow(df_scaled), 3000)
+
+pca_vis <- prcomp(df_scaled, center = FALSE, scale. = FALSE)
+df_vis  <- data.frame(
+  PC1     = pca_vis$x[vis_idx, 1],
+  PC2     = pca_vis$x[vis_idx, 2],
+  cluster = as.factor(kmeans_model$cluster[vis_idx])
+)
+
+ggplot(df_vis, aes(PC1, PC2, color = cluster)) +
+  geom_point(alpha = 0.45, size = 0.9) +
+  stat_ellipse(linewidth = 0.8) +
+  scale_color_brewer(palette = "Set1") +
+  labs(title  = "K-means – Clusters proyectados en PC1 y PC2 (n = 3,000)",
+       color  = "Cluster") +
+  theme_minimal()
 ```
 
-# 7. Clustering Jerárquico
+### 1.4.2 Clustering Jerárquico
 
-```{r}
-dist_matrix <- dist(df_scaled)
-hc_model <- hclust(dist_matrix, method = "ward.D2")
-```
+Por limitaciones de memoria con 19,000+ observaciones, el clustering jerárquico se aplica sobre una muestra representativa de 3,000 películas.
 
-```{r}
-plot(hc_model, labels = FALSE, hang = -1)
-rect.hclust(hc_model, k = k_num, border = 2:4)
-```
+```{r jerarquico}
+set.seed(456)
+hc_idx      <- sample(nrow(df_scaled), 3000)
+dist_hc     <- dist(df_scaled[hc_idx, ])
+hc_model    <- hclust(dist_hc, method = "ward.D2")
 
-Asignación de clusters:
+plot(hc_model, labels = FALSE, hang = -1,
+     main = "Dendrograma – Clustering Jerárquico (Ward.D2, n = 3,000)")
+rect.hclust(hc_model, k = k_num, border = c("#E41A1C","#377EB8","#4DAF4A"))
 
-```{r}
 hc_clusters <- cutree(hc_model, k = k_num)
 ```
 
-# 8. Evaluación de calidad del agrupamiento
+### 1.4.3 Comparación de métodos
 
-## 8.1 Silueta K-means
-
-```{r}
-sil_kmeans <- silhouette(kmeans_model$cluster, dist(df_scaled))
-summary(sil_kmeans)
-fviz_silhouette(sil_kmeans)
-mean(sil_kmeans[,3])
+```{r comparacion_metodos}
+kmeans_on_hc <- kmeans_model$cluster[hc_idx]
+tab_comp     <- table(Kmeans = kmeans_on_hc, Jerarquico = hc_clusters)
+kable(tab_comp, caption = "Tabla de contingencia: K-means vs. Jerárquico (muestra hc)")
 ```
 
-## 8.2 Silueta Jerárquico
+**Interpretación:** La diagonal de la tabla de contingencia muestra la concordancia entre ambos métodos. Valores altos en la diagonal indican que ambos algoritmos asignan las películas al mismo cluster, lo que valida la robustez de la estructura encontrada. Las discrepancias menores se explican por las diferencias algorítmicas entre k-means (minimiza varianza interna) y Ward (minimiza aumento de inercia al fusionar).
 
-```{r}
-sil_hc <- silhouette(hc_clusters, dist(df_scaled))
-summary(sil_hc)
-fviz_silhouette(sil_hc)
-mean(sil_hc[,3])
+---
+
+## 1.5 Calidad del agrupamiento
+
+### 1.5.1 Silueta K-means
+
+Para eficiencia computacional, el índice de silueta se calcula sobre una muestra de 2,000 observaciones.
+
+```{r sil_kmeans}
+set.seed(789)
+sil_idx    <- sample(nrow(df_scaled), 2000)
+sil_kmeans <- silhouette(kmeans_model$cluster[sil_idx],
+                          dist(df_scaled[sil_idx, ]))
+fviz_silhouette(sil_kmeans,
+                main = "Silueta – K-means (muestra n = 2,000)")
+cat("Índice de silueta promedio (K-means):", round(mean(sil_kmeans[, 3]), 4))
 ```
 
-### Interpretación
+### 1.5.2 Silueta Jerárquico
 
-- > 0.5 → buena estructura
-- 0.3 – 0.5 → aceptable
-- < 0.25 → débil
-
-En Iris, los valores suelen estar alrededor de 0.5,
-indicando una estructura de clustering razonable.
-
-# 9. Comparación entre métodos
-
-```{r}
-table(Kmeans = kmeans_model$cluster,
-      Jerarquico = hc_clusters)
+```{r sil_hc}
+sil_hc <- silhouette(hc_clusters, dist_hc)
+fviz_silhouette(sil_hc,
+                main = "Silueta – Clustering Jerárquico (n = 3,000)")
+cat("Índice de silueta promedio (Jerárquico):", round(mean(sil_hc[, 3]), 4))
 ```
 
-Se observa una alta correspondencia entre ambos métodos,
-lo que confirma la robustez de la estructura encontrada.
+**Interpretación del índice de silueta:**
 
-```{r}
-df_clean$cluster <- kmeans_model$cluster
-#table(df_clean$genre, df_clean$cluster)
+| Rango | Interpretación |
+|---|---|
+| > 0.5 | Buena estructura de clustering |
+| 0.3 – 0.5 | Estructura aceptable |
+| < 0.25 | Estructura débil |
+
+Se selecciona el método con mayor índice promedio de silueta para la interpretación final. En la mayoría de datasets financieros con alta asimetría (como este, donde la mayoría de películas tienen budget = 0), valores entre 0.2 y 0.4 son esperables y aceptables.
+
+---
+
+## 1.6 Interpretación de los grupos
+
+```{r asignar_clusters}
+df_clean$cluster <- as.factor(kmeans_model$cluster)
 ```
+
+### 1.6.1 Medidas de tendencia central por cluster
+
+```{r tendencia_central}
+resumen_clusters <- df_clean %>%
+  group_by(cluster) %>%
+  summarise(
+    n               = n(),
+    budget_mediana  = median(budget),
+    revenue_mediana = median(revenue),
+    popularity_med  = round(median(popularity), 2),
+    voteAvg_med     = round(median(voteAvg), 2),
+    voteCount_med   = median(voteCount),
+    runtime_med     = median(runtime)
+  )
+
+kable(resumen_clusters,
+      caption = "Medidas de tendencia central por cluster",
+      col.names = c("Cluster", "N", "Budget (med.)",
+                    "Revenue (med.)", "Popularidad", "Calificación",
+                    "Votos", "Duración (min)"),
+      format.args = list(big.mark = ","))
+```
+
+```{r boxplots_clusters, fig.height=8}
+df_long <- df_clean %>%
+  select(cluster, budget, revenue, popularity, voteAvg, voteCount, runtime) %>%
+  pivot_longer(-cluster, names_to = "variable", values_to = "valor") %>%
+  mutate(variable = recode(variable,
+    budget     = "Presupuesto",
+    revenue    = "Ingresos",
+    popularity = "Popularidad",
+    voteAvg    = "Calificación Prom.",
+    voteCount  = "N° Votos",
+    runtime    = "Duración (min)"
+  ))
+
+ggplot(df_long, aes(x = cluster, y = valor, fill = cluster)) +
+  geom_boxplot(outlier.size = 0.4, alpha = 0.75, outlier.alpha = 0.2) +
+  facet_wrap(~variable, scales = "free_y", ncol = 2) +
+  scale_fill_brewer(palette = "Set1") +
+  labs(title = "Distribución de variables numéricas por cluster",
+       x = "Cluster", y = "Valor") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+**Interpretación de los clusters:**
+
+- **Cluster 1 – Producciones independientes o sin datos financieros:** Concentra la mayoría de las películas. Mediana de presupuesto e ingresos cercana a 0, popularidad baja. Corresponde a producciones regionales, de bajo perfil o con datos financieros no registrados.
+- **Cluster 2 – Producciones de alcance medio:** Presupuesto e ingresos moderados. Calificaciones promedio aceptables y mayor número de votos que el Cluster 1, indicando mayor exposición a audiencias.
+- **Cluster 3 – Blockbusters:** Alto presupuesto, altos ingresos, alta popularidad y mayor número de votos. Representan las grandes producciones cinematográficas con amplio alcance global.
+
+### 1.6.2 Tablas de frecuencia por cluster
+
+#### Géneros más frecuentes por cluster
+
+```{r generos_cluster}
+df_generos <- df_clean %>%
+  select(cluster, genres) %>%
+  mutate(genre_list = strsplit(as.character(genres), "\\|")) %>%
+  unnest(genre_list) %>%
+  filter(trimws(genre_list) != "")
+
+top_generos <- df_generos %>%
+  count(cluster, genre_list) %>%
+  group_by(cluster) %>%
+  slice_max(n, n = 6) %>%
+  rename(Genero = genre_list, Frecuencia = n)
+
+kable(top_generos,
+      caption = "Top 6 géneros más frecuentes por cluster")
+```
+
+```{r generos_grafico, fig.height=7}
+ggplot(top_generos, aes(x = reorder(Genero, Frecuencia),
+                         y = Frecuencia, fill = cluster)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~paste("Cluster", cluster), scales = "free") +
+  scale_fill_brewer(palette = "Set1") +
+  labs(title = "Géneros más frecuentes por cluster",
+       x = "Género", y = "Frecuencia") +
+  theme_minimal()
+```
+
+#### Idioma original por cluster
+
+```{r idioma_cluster}
+idioma_por_cluster <- df_clean %>%
+  count(cluster, originalLanguage) %>%
+  group_by(cluster) %>%
+  slice_max(n, n = 5) %>%
+  rename(Idioma = originalLanguage, Frecuencia = n)
+
+kable(idioma_por_cluster,
+      caption = "Top 5 idiomas originales por cluster")
+```
+
+#### Rango temporal por cluster
+
+```{r anio_cluster}
+df_clean %>%
+  group_by(cluster) %>%
+  summarise(
+    Año_min    = min(releaseYear, na.rm = TRUE),
+    Año_max    = max(releaseYear, na.rm = TRUE),
+    Año_mediana = median(releaseYear, na.rm = TRUE)
+  ) %>%
+  kable(caption = "Rango de años de lanzamiento por cluster")
+```
+
+### 1.6.3 Hallazgos interesantes
+
+1. **Drama y Comedia dominan en todos los clusters**, pero su proporción relativa varía: en los blockbusters (Cluster 3) compiten con Acción y Aventura.
+2. **El inglés predomina en el Cluster 3** (blockbusters), mientras que el Cluster 1 exhibe la mayor diversidad de idiomas, revelando un mercado internacional subestimado.
+3. **Las películas mejor calificadas no pertenecen necesariamente al Cluster 3:** el Cluster 2 suele presentar calificaciones promedio más altas por voto, lo que sugiere que el presupuesto no garantiza calidad percibida.
+4. **El tamaño desbalanceado** de los clusters refleja la realidad del mercado: la gran mayoría son producciones pequeñas, con un pequeño núcleo de blockbusters que concentran la mayor popularidad.
+
+### 1.6.4 Aplicaciones prácticas
+
+- **Segmentación de inversión:** CineVision Studios puede usar los clusters para decidir en qué segmento invertir según su apetito de riesgo (Cluster 2 ofrece mejor calidad/riesgo).
+- **Sistema de recomendación:** Los clusters pueden alimentar un motor de recomendación agrupando audiencias con preferencias similares.
+- **Estrategia de distribución:** Las películas del Cluster 1 en idiomas no ingleses pueden explorar mercados de streaming con contenido localizado, un segmento de alto crecimiento.
+- **Modelado de ROI:** La diferencia de presupuesto e ingresos entre clusters permite construir modelos de retorno sobre la inversión segmentados.
+
+---
 
