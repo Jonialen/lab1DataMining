@@ -680,3 +680,131 @@ Este análisis revela que el **éxito comercial** (PC1) y la **calidad percibida
 
 ---
 
+# 4. Otros Algoritmos – UMAP
+
+## 4.1 Justificación de la selección
+
+Se seleccionó **UMAP (Uniform Manifold Approximation and Projection)** entre las alternativas disponibles (SVD, t-SNE, ICA) por las siguientes razones:
+
+| Criterio | UMAP | t-SNE |
+|---|---|---|
+| Complejidad computacional | O(n log n) | O(n²) |
+| Preserva estructura global | Sí | Parcialmente |
+| Escalabilidad con 19k+ filas | Alta | Baja |
+| Integración con clustering | Directa | Directa |
+| Parámetros intuitivos | `n_neighbors`, `min_dist` | `perplexity` |
+
+Con ~19,000 películas, **t-SNE requeriría horas de cómputo** y el resultado sería difícil de interpretar globalmente. UMAP completa el proceso en minutos y preserva tanto vecindades locales como estructura global, siendo ideal para validar visualmente los clusters obtenidos.
+
+## 4.2 Aplicación e interpretación
+
+```{r umap}
+set.seed(42)
+umap_result <- umap(df_scaled,
+                    n_neighbors  = 15,
+                    min_dist     = 0.1,
+                    n_components = 2,
+                    verbose      = FALSE)
+
+umap_df <- data.frame(
+  UMAP1      = umap_result[, 1],
+  UMAP2      = umap_result[, 2],
+  cluster    = df_clean$cluster,
+  popularity = df_clean$popularity,
+  voteAvg    = df_clean$voteAvg,
+  budget     = df_clean$budget,
+  revenue    = df_clean$revenue
+)
+```
+
+### Proyección UMAP coloreada por cluster K-means
+
+```{r umap_cluster}
+ggplot(umap_df, aes(x = UMAP1, y = UMAP2, color = cluster)) +
+  geom_point(alpha = 0.4, size = 0.6) +
+  scale_color_brewer(palette = "Set1") +
+  labs(title    = "Proyección UMAP de películas",
+       subtitle = "Coloreado por cluster K-means (k = 3)",
+       color    = "Cluster") +
+  theme_minimal() +
+  guides(color = guide_legend(override.aes = list(size = 3, alpha = 1)))
+```
+
+### Proyección UMAP coloreada por popularidad
+
+```{r umap_popularidad}
+ggplot(umap_df, aes(x = UMAP1, y = UMAP2, color = log1p(popularity))) +
+  geom_point(alpha = 0.4, size = 0.6) +
+  scale_color_viridis_c(option = "plasma") +
+  labs(title = "Proyección UMAP – Popularidad (escala logarítmica)",
+       color = "log(Popularidad + 1)") +
+  theme_minimal()
+```
+
+### Proyección UMAP coloreada por calificación promedio
+
+```{r umap_voteAvg}
+ggplot(umap_df %>% filter(voteAvg > 0),
+       aes(x = UMAP1, y = UMAP2, color = voteAvg)) +
+  geom_point(alpha = 0.4, size = 0.6) +
+  scale_color_viridis_c(option = "magma") +
+  labs(title = "Proyección UMAP – Calificación promedio (películas con votos)",
+       color = "voteAvg") +
+  theme_minimal()
+```
+
+**Interpretación:**
+
+- La proyección UMAP **valida visualmente la separación de los clusters** de K-means: los grupos identificados ocupan regiones diferenciadas del espacio 2D.
+- Se observa un **gradiente continuo** entre producciones pequeñas y blockbusters, coherente con el estadístico de Hopkins: no existe una separación abrupta, sino una transición gradual.
+- Las **regiones de mayor densidad** corresponden al Cluster 1 (películas sin datos financieros), que forma el "núcleo" de la nube de puntos.
+- Los **blockbusters del Cluster 3** aparecen como puntos periféricos o en subregiones claramente separadas, con mayor popularidad y calificaciones más altas.
+- La **calificación promedio** muestra patrones espaciales interesantes: las películas mejor calificadas no son necesariamente las más populares, confirmando que calidad y popularidad son dimensiones independientes.
+
+---
+
+# 5. Conclusiones y Hallazgos para CineVision Studios
+
+## 5.1 Resumen de Clustering
+
+El análisis identificó **3 segmentos distintos** en el mercado cinematográfico:
+
+| Cluster | Perfil | Características clave |
+|---|---|---|
+| 1 | Producciones independientes | Budget ≈ 0, revenue ≈ 0, diversidad de idiomas, alta frecuencia |
+| 2 | Cine de alcance medio | Presupuesto moderado, mejor relación calidad/inversión |
+| 3 | Blockbusters | Alto presupuesto, altos ingresos, alta popularidad, inglés dominante |
+
+La concordancia entre K-means y el clustering jerárquico confirma que esta segmentación es robusta.
+
+## 5.2 Conclusiones del PCA
+
+La reducción dimensional reveló que la variabilidad del dataset puede explicarse con pocos componentes:
+
+- **PC1 (Escala comercial):** Presupuesto, ingresos y audiencia son las variables más determinantes.
+- **PC2 (Complejidad de producción):** Tamaño del elenco y número de productoras.
+- **PC3 (Calidad percibida):** Calificación promedio y popularidad, independiente del presupuesto.
+
+> El hallazgo más importante: **el éxito comercial y la calidad percibida son dimensiones independientes**, lo que permite diseñar estrategias eficientes sin necesidad de los presupuestos de un blockbuster.
+
+## 5.3 Reglas de Asociación más relevantes
+
+1. **Presupuesto alto + Acción/Aventura → Ingresos altos:** Confirma la fórmula blockbuster, pero con alta inversión requerida.
+2. **Drama + duración larga → Calificación alta:** Oportunidad de bajo costo con alta valoración de audiencia.
+3. **Popularidad media + calificación alta → presupuesto medio:** El nicho de mayor eficiencia para CineVision Studios.
+
+## 5.4 Validación por UMAP
+
+UMAP confirmó que los clusters tienen separación espacial real en el espacio de alta dimensión, y que la calidad y la popularidad forman gradientes continuos que permiten optimización fina de portafolio.
+
+## 5.5 Recomendaciones estratégicas para CineVision Studios
+
+1. **Invertir en el Cluster 2 (mercado medio):** La mejor relación calidad/riesgo. Las reglas de asociación y el PCA coinciden en que este segmento es el más eficiente en retorno.
+
+2. **Explotar el mercado de Drama de larga duración:** Las reglas muestran que este perfil obtiene altas calificaciones con presupuestos accesibles. Un nicho subestimado por la competencia orientada a blockbusters.
+
+3. **Diversificación de idiomas:** El Cluster 1 concentra producción en idiomas no ingleses con audiencias globales sin explotar. La inversión en distribución internacional puede capturar mercados emergentes.
+
+4. **No asumir que popularidad = calidad:** El PCA y UMAP muestran que son dimensiones independientes. Una estrategia de marketing focalizado puede convertir películas bien calificadas (pero poco populares) en éxitos de nicho.
+
+5. **Optimizar tamaño de elenco y número de géneros:** El PCA (PC2) sugiere que la complejidad de producción no necesariamente correlaciona con mejores resultados. Producciones más enfocadas pueden ser más eficientes.
