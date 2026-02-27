@@ -1,7 +1,9 @@
 ---
 title: ""
 author: "Jonathan Díaz, Martín Pérez, Karen Toledo"
-output: html_document
+output:
+  html_document:
+    md_extensions: "-yaml_metadata_block-simple_tables-multiline_tables-grid_tables"
 ---
 
 <div style="text-align: left; font-size: 16px; line-height: 1.6;">
@@ -41,7 +43,7 @@ Miércoles 25 de febrero, 2026
 
 El aprendizaje computacional es una de las áreas más importantes en el desarrollo de la inteligencia artificial, ya que permite que los sistemas mejoren su desempeño a partir de la experiencia y los datos disponibles (Cencerrado & Ventura, 2019). El aprendizaje automático ajusta sus modelos en función de patrones observados en los conjuntos de datos.
 
-De acuerdo con Sammut y Webb (2011), el aprendizaje automático estudia algoritmos que mejoran su rendimiento através de la experiencia. Dentro de esta área, el aprendizaje no supervisado se caracteriza por trabajar únicamente con datos de entrada, sin etiquetas o salidas esperadas. El objetivo es descubrir estructuras, relaciones o patrones ocultos en los datos. Por eso en este contexto, algoritmos como SVD, ICA, t-SNE y UMAP son útiles porque permiten reducir dimensionalidad, separar fuentes ocultas o visualizar datos complejos, lo que los convierte en herramientas fundamentales en minería de datos.
+De acuerdo con Sammut y Webb (2011), el aprendizaje automático estudia algoritmos que mejoran su rendimiento a través de la experiencia. Dentro de esta área, el aprendizaje no supervisado se caracteriza por trabajar únicamente con datos de entrada, sin etiquetas o salidas esperadas. El objetivo es descubrir estructuras, relaciones o patrones ocultos en los datos. Por eso en este contexto, algoritmos como SVD, ICA, t-SNE y UMAP son útiles porque permiten reducir dimensionalidad, separar fuentes ocultas o visualizar datos complejos, lo que los convierte en herramientas fundamentales en minería de datos.
 
 ---
 
@@ -54,7 +56,7 @@ El objetivo principal de este trabajo es comprender y comparar distintos algorit
 3. Analizar e interpretar los resultados mediante tablas y visualizaciones.
 4. Comparar sus ventajas y limitaciones.
 
-Con esto se espera desarrollar un criterio acerca deluso adecuado de cada método en distintos escenarios de análisis de datos.
+Con esto se espera desarrollar un criterio acerca del uso adecuado de cada método en distintos escenarios de análisis de datos.
 
 ---
 
@@ -66,7 +68,7 @@ Con esto se espera desarrollar un criterio acerca deluso adecuado de cada métod
 
 #### a. Explicación del algoritmo y su objetivo principal
 
-La **Descomposición en Valores Singulares (SVD)** es una técnica del álgebra lineal que permite descomponer cualquier matriz real $A$ en el producto de tres matrices: $$ A = U S V^T $$ donde $U$ y $V$ son matrices ortogonales y $S$ es una matriz diagonal que contiene los llamados **valores singulares**, los cuales se ordenan de mayor a menor (Pozo Montero & Ripoll Missé, 2019). También puede escribirse como una suma de matrices de rango 1: $$ A = \sum_{j=1}^{r} \sigma_j u_j v_j^T $$ donde $r$ es el rango de la matriz (Pozo Montero & Ripoll Missé, 2019). 
+La Descomposición en Valores Singulares (SVD) es una técnica del álgebra lineal que permite descomponer cualquier matriz real $A$ en el producto de tres matrices: $$ A = U S V^T $$ donde $U$ y $V$ son matrices ortogonales y $S$ es una matriz diagonal que contiene los llamados valores singulares, los cuales se ordenan de mayor a menor (Pozo Montero & Ripoll Missé, 2019). También puede escribirse como una suma de matrices de rango 1: $$ A = \sum_{j=1}^{r} \sigma_j u_j v_j^T $$ donde $r$ es el rango de la matriz (Pozo Montero & Ripoll Missé, 2019). 
 En otras palabras, la SVD permite separar una matriz en partes más simples que ayudan a entender su estructura. Según Embree (2019), es una de las factorizaciones más importantes porque permite analizar datos y aproximar matrices de forma eficiente. El objetivo principal de la SVD es poder estudiar mejor los datos y, si es necesario, reducir la cantidad de información sin perder lo más importante. 
 
 ---
@@ -114,7 +116,7 @@ La SVD también se utiliza en la restauración y análisis de imágenes, con apl
 
 #### a. Seleccione un conjunto de datos
 
-Para esta aplicación práctica utilizamos el dataset **MovieLens (ratings.csv)**, que contiene valoraciones de usuarios sobre películas.
+Para esta aplicación práctica utilizamos el dataset MovieLens (ratings.csv), que contiene valoraciones de usuarios sobre películas.
 
 Cada registro incluye:
 - `user_id`
@@ -229,19 +231,187 @@ Esto sugiere que muchos usuarios comparten patrones generales de preferencia, pe
 En conclusión, la proyección confirma que la SVD logró capturar estructura latente dentro del dataset, diferenciando patrones de comportamiento entre usuarios.
 
 ---
-## 2.2 t-SNE
+
+## 2.2 t-SNE (t-Distributed Stochastic Neighbor Embedding)
 
 ### 2.2.1 Descripción teórica
 
+#### a. Explicación del algoritmo y su objetivo principal
+
+t-SNE (t-Distributed Stochastic Neighbor Embedding) es un algoritmo de reducción de dimensionalidad no lineal diseñado principalmente para la visualización de datos de alta dimensión en espacios de dos o tres dimensiones (van der Maaten & Hinton, 2008).
+
+El algoritmo opera en dos etapas principales:
+
+1. En el espacio original (alta dimensión): Modela las similitudes entre pares de puntos usando distribuciones gaussianas. La probabilidad condicional de que el punto $x_j$ sea vecino de $x_i$ se define como:
+$$p_{j|i} = \frac{\exp(-||x_i - x_j||^2 / 2\sigma_i^2)}{\sum_{k \neq i} \exp(-||x_i - x_k||^2 / 2\sigma_i^2)}$$
+La probabilidad conjunta se simetriza como:
+$$p_{ij} = \frac{p_{j|i} + p_{i|j}}{2n}$$
+
+2. En el espacio de baja dimensión: Modela las similitudes usando una distribución t de Student con un grado de libertad (cola más pesada):
+$$q_{ij} = \frac{(1 + ||y_i - y_j||^2)^{-1}}{\sum_{k \neq l}(1 + ||y_k - y_l||^2)^{-1}}$$
+
+El objetivo es encontrar una representación en baja dimensión que minimice la divergencia de Kullback-Leibler entre ambas distribuciones:
+$$KL(P||Q) = \sum_i \sum_j p_{ij} \log \frac{p_{ij}}{q_{ij}}$$
+
+Esta minimización se realiza mediante descenso de gradiente (van der Maaten & Hinton, 2008).
+
+---
+
+#### b. Principales características y supuestos
+
+El parámetro más importante de t-SNE es la perplejidad (*perplexity*), que actúa como un análogo continuo al número de vecinos más cercanos. Valores típicos van de 5 a 50, con valor por defecto de 30. Un valor bajo favorece la estructura local, mientras que un valor alto considera relaciones más globales (van der Maaten & Hinton, 2008).
+
+Otras características relevantes:
+
+- t-SNE es un algoritmo estocástico: diferentes ejecuciones con los mismos parámetros pueden producir resultados distintos.
+- La función de costo es no convexa, por lo que distintas inicializaciones pueden llevar a diferentes mínimos locales.
+- El uso de la distribución t de Student en baja dimensión (colas más pesadas) resuelve el problema de aglomeración (*crowding problem*): en alta dimensión existen más puntos a distancias moderadas, y la gaussiana no tiene suficiente espacio para representarlos correctamente en 2D.
+- t-SNE está diseñado para visualización, no para reducción de dimensionalidad general ni para proyectar datos nuevos.
+
+---
+
+#### c. Diferencias con PCA
+
+PCA busca las direcciones de máxima varianza mediante transformaciones lineales. En contraste, t-SNE es un método no lineal que preserva la estructura local de los datos, no la varianza global.
+
+Diferencias principales:
+
+- PCA es determinista y rápido; t-SNE es estocástico y computacionalmente más costoso.
+- PCA puede proyectar nuevas observaciones directamente; t-SNE no generaliza a datos no vistos sin reentrenar.
+- PCA preserva distancias globales; t-SNE preserva relaciones de vecindad local.
+- Los ejes de PCA tienen interpretación (componentes principales con varianza explicada); los ejes de t-SNE no tienen significado geométrico directo.
+
+---
+
 ### 2.2.2 Usos y aplicaciones
+
+#### a. Usos en análisis de datos
+
+t-SNE se utiliza principalmente para:
+
+- Visualización de datos de alta dimensión en 2D o 3D.
+- Exploración de agrupaciones y estructuras latentes en datasets complejos.
+- Análisis exploratorio previo al modelado supervisado o al clustering (van der Maaten & Hinton, 2008).
+
+---
+
+#### b. Áreas de aplicación
+
+##### Bioinformática y genómica
+
+t-SNE es ampliamente utilizado en el análisis de datos de secuenciación de ARN de célula única (scRNA-seq), donde permite visualizar poblaciones celulares distintas y descubrir subtipos celulares en tejidos complejos. La capacidad del algoritmo para separar grupos en el espacio de baja dimensión lo hace especialmente valioso en este contexto.
+
+##### Visión computacional y procesamiento de lenguaje natural
+
+t-SNE se aplica para visualizar representaciones internas de redes neuronales, como embeddings de palabras (Word2Vec, BERT) o características de capas convolucionales, permitiendo comprender la estructura del espacio de representación aprendido por los modelos.
+
+---
 
 ### 2.2.3 Aplicación práctica
 
 #### a. Selección del conjunto de datos
 
+Para esta aplicación práctica utilizamos el mismo dataset Breast Cancer Wisconsin (Diagnostic) Data Set (breastcancer.csv) utilizado en UMAP, lo que permite comparar directamente cómo ambos algoritmos visualizan la misma información en dos dimensiones.
+
+---
+
 #### b. Implementación del algoritmo
 
+```{r}
+# Librerías necesarias
+library(dplyr)
+library(ggplot2)
+library(Rtsne)
+
+breast_cancer <- read.csv("breastcancer.csv")
+
+head(breast_cancer)
+```
+
+```{r}
+# Limpieza de datos: eliminamos columnas no numéricas
+breast_cancer_clean <- breast_cancer %>%
+  select(-id, -X)
+
+breast_cancer_clean$diagnosis <- as.factor(breast_cancer_clean$diagnosis)
+
+X_data <- breast_cancer_clean %>%
+  select(-diagnosis)
+
+y_label <- breast_cancer_clean$diagnosis
+
+dim(X_data)
+```
+
+```{r}
+# Estandarización de los datos
+X_scaled <- scale(X_data)
+
+# Eliminamos filas duplicadas exactas (requerido por Rtsne)
+dup_idx <- !duplicated(X_scaled)
+X_unique <- X_scaled[dup_idx, ]
+y_unique <- y_label[dup_idx]
+
+summary(X_unique[,1:5])
+```
+
+```{r}
+set.seed(123)
+
+tsne_result <- Rtsne(
+  X_unique,
+  dims = 2,
+  perplexity = 30,
+  max_iter = 1000,
+  verbose = FALSE
+)
+
+str(tsne_result$Y)
+```
+
+##### Explicación del proceso de t-SNE
+
+En este paso se aplicó el algoritmo t-SNE al dataset de cáncer de mama, siguiendo los mismos pasos de preprocesamiento que en UMAP: se eliminaron columnas no numéricas y se estandarizaron las variables, ya que t-SNE es sensible a la escala. Adicionalmente, se eliminaron filas duplicadas exactas, ya que la implementación `Rtsne` lo requiere.
+
+Los parámetros configurados fueron:
+
+- `dims = 2`: proyección a dos dimensiones para visualización.
+- `perplexity = 30`: valor estándar que equilibra estructura local y global.
+- `max_iter = 1000`: número de iteraciones del descenso de gradiente para garantizar convergencia.
+
+t-SNE minimiza la divergencia KL entre la distribución de similitudes gaussiana en el espacio original y la distribución t de Student en la proyección 2D.
+
+```{r}
+# Creamos dataframe con la proyección
+tsne_df <- data.frame(
+  tSNE1 = tsne_result$Y[,1],
+  tSNE2 = tsne_result$Y[,2],
+  diagnosis = y_unique
+)
+
+head(tsne_df)
+```
+
+```{r}
+# Visualización de la proyección
+ggplot(tsne_df, aes(x = tSNE1, y = tSNE2, color = diagnosis)) +
+  geom_point(size = 2, alpha = 0.7) +
+  labs(title = "Proyección t-SNE - Breast Cancer Dataset",
+       x = "t-SNE 1",
+       y = "t-SNE 2",
+       color = "Diagnóstico") +
+  theme_minimal()
+```
+
 #### c. Análisis e interpretación de resultados
+
+##### Interpretación de la proyección t-SNE
+
+La gráfica muestra la representación bidimensional del dataset de cáncer de mama generada por t-SNE. Cada punto corresponde a una observación y el color indica el diagnóstico (M: maligno, B: benigno).
+
+Se observa una separación clara entre ambos grupos: los tumores malignos y benignos forman agrupaciones bien diferenciadas en el espacio de baja dimensión. Esto confirma que las características morfológicas del dataset contienen suficiente estructura para distinguir ambos diagnósticos.
+
+A diferencia de UMAP, t-SNE tiende a producir agrupaciones más compactas e internamente homogéneas, pero las distancias entre grupos en la proyección no son directamente interpretables como distancias en el espacio original. El algoritmo prioriza la estructura local, por lo que la separación observada refleja diferencias en patrones de vecindad más que en escala global.
 
 ---
 
@@ -295,11 +465,21 @@ UMAP se utiliza principalmente para:
 
 - Exploración de estructuras latentes en grandes volúmenes de datos (McInnes et al., 2018).
 
+#### b. Áreas de aplicación
+
+##### Biología computacional
+
+UMAP es ampliamente utilizado en análisis de datos de secuenciación de célula única (scRNA-seq), donde permite visualizar y explorar la heterogeneidad entre poblaciones celulares. Su capacidad para preservar estructura global lo hace preferible a t-SNE cuando se requiere interpretar relaciones entre grupos distantes.
+
+##### Aprendizaje automático y reducción de dimensionalidad
+
+UMAP se utiliza como paso de preprocesamiento antes de aplicar algoritmos de clasificación o clustering, ya que reduce la dimensionalidad manteniendo la estructura relevante de los datos. A diferencia de t-SNE, UMAP permite proyectar nuevas observaciones, lo que lo hace aplicable en flujos de producción reales (McInnes et al., 2018).
+
 ### 2.3.3 Aplicación práctica
 
 #### a. Selección del conjunto de datos
 
-Para esta aplicación práctica utilizamos el dataset **Breast Cancer Wisconsin (Diagnostic) Data Set (breastcancer.csv)**, que contiene características de los núcleos celulares, y si estos son malignos o benignos.
+Para esta aplicación práctica utilizamos el dataset Breast Cancer Wisconsin (Diagnostic) Data Set (breastcancer.csv), que contiene características de los núcleos celulares, y si estos son malignos o benignos.
 
 Cada registro incluye:
 - `ID`
@@ -427,11 +607,11 @@ Los puntos cercanos representan pacientes con características similares, mientr
 
 ## 2.4 ICA (Análisis de Componentes Independientes)
 
-### Descripción teórica
+### 2.4.1 Descripción teórica
 
 #### a. Explicación del algoritmo y su objetivo principal
 
-El **Análisis de Componentes Independientes (ICA)** es una técnica multivariada no supervisada que busca separar señales originales que han sido mezcladas linealmente. La idea principal es que lo que observamos es una combinación de varias señales independientes que no podemos ver directamente (Hyvärinen, Karhunen & Oja, 2001).
+El Análisis de Componentes Independientes (ICA) es una técnica multivariada no supervisada que busca separar señales originales que han sido mezcladas linealmente. La idea principal es que lo que observamos es una combinación de varias señales independientes que no podemos ver directamente (Hyvärinen, Karhunen & Oja, 2001).
 
 El modelo matemático básico de ICA se expresa como:
 
@@ -443,11 +623,11 @@ donde:
 
 - $X$ es el vector de señales observadas,
 - $A$ es la matriz de mezcla (desconocida),
-- $S$ es el vector de señales originales o **componentes independientes** (Hyvärinen et al., 2001).
+- $S$ es el vector de señales originales o componentes independientes (Hyvärinen et al., 2001).
 
 El objetivo del algoritmo es estimar tanto la matriz de mezcla como las señales originales, utilizando únicamente la información contenida en las señales observadas.
 
-Este problema es conocido como **separación ciega de fuentes** (blind source separation), y un ejemplo clásico es el "cocktail party problem", donde se intenta separar varias voces grabadas por diferentes micrófonos en un mismo ambiente (Hyvärinen et al., 2001).
+Este problema es conocido como separación ciega de fuentes (blind source separation), y un ejemplo clásico es el "cocktail party problem", donde se intenta separar varias voces grabadas por diferentes micrófonos en un mismo ambiente (Hyvärinen et al., 2001).
 
 ---
 
@@ -455,8 +635,8 @@ Este problema es conocido como **separación ciega de fuentes** (blind source se
 
 Para que el modelo ICA pueda estimarse correctamente, se deben cumplir ciertos supuestos:
 
-- Las señales originales deben ser **estadísticamente independientes**.
-- Las señales deben ser **no gaussianas**.
+- Las señales originales deben ser estadísticamente independientes.
+- Las señales deben ser no gaussianas.
 - Generalmente se asume que el número de fuentes es igual al número de señales observadas (Hyvärinen, 2001).
 
 Una idea importante es que ICA va más allá de la simple incorrelación, pues busca independencia estadística completa, no solo que la covarianza sea cero (Tema 3, 2006).
@@ -478,7 +658,7 @@ En particular:
 
 ---
 
-### Usos y aplicaciones
+### 2.4.2 Usos y aplicaciones
 
 #### a. Usos en análisis de datos
 
@@ -508,9 +688,122 @@ ICA se utiliza en análisis de señales cerebrales (EEG y MEG) para separar señ
 
 #### a. Selección del conjunto de datos
 
+Para esta aplicación práctica se utilizaron señales sintéticas generadas en R, siguiendo el enfoque canónico de demostración de ICA conocido como el "problema del cocktail party". Este enfoque es ampliamente utilizado en la literatura académica para ilustrar la separación ciega de fuentes (Hyvärinen et al., 2001).
+
+Se generaron tres señales fuente independientes:
+
+- Una señal senoidal (periódica y suave).
+- Una señal tipo diente de sierra (variación lineal periódica).
+- Una señal cuadrada (valores discretos +1 y −1).
+
+Estas señales se mezclaron linealmente con una matriz de mezcla $A$, y el objetivo del algoritmo ICA fue recuperar las señales originales a partir únicamente de las mezclas observadas.
+
+---
+
 #### b. Implementación del algoritmo
 
+```{r}
+library(fastICA)
+
+# Generamos el vector de tiempo
+n <- 1000
+t_seq <- seq(0, 4 * pi, length.out = n)
+
+# Señales fuente independientes
+s1 <- sin(2 * t_seq)                          # Senoidal
+s2 <- ((t_seq %% pi) / pi) * 2 - 1           # Diente de sierra
+s3 <- sign(sin(3 * t_seq))                   # Cuadrada
+
+# Combinamos en una matriz y estandarizamos
+S <- cbind(s1, s2, s3)
+S <- scale(S)
+
+head(S)
+```
+
+```{r}
+# Definimos la matriz de mezcla A (desconocida en un caso real)
+set.seed(42)
+A <- matrix(c(1.0, 0.5, 1.5,
+              1.0, 2.0, 1.0,
+              0.5, 1.0, 2.0),
+            nrow = 3, byrow = TRUE)
+
+# Mezclamos las señales: X = S %*% t(A)
+X <- S %*% t(A)
+
+# Visualización: señales originales vs señales mezcladas
+par(mfrow = c(3, 2))
+
+plot(t_seq, S[,1], type = "l", col = "steelblue",
+     main = "Señal original 1 (Senoidal)", xlab = "Tiempo", ylab = "Amplitud")
+plot(t_seq, X[,1], type = "l", col = "darkred",
+     main = "Señal mezclada 1", xlab = "Tiempo", ylab = "Amplitud")
+
+plot(t_seq, S[,2], type = "l", col = "steelblue",
+     main = "Señal original 2 (Diente de sierra)", xlab = "Tiempo", ylab = "Amplitud")
+plot(t_seq, X[,2], type = "l", col = "darkred",
+     main = "Señal mezclada 2", xlab = "Tiempo", ylab = "Amplitud")
+
+plot(t_seq, S[,3], type = "l", col = "steelblue",
+     main = "Señal original 3 (Cuadrada)", xlab = "Tiempo", ylab = "Amplitud")
+plot(t_seq, X[,3], type = "l", col = "darkred",
+     main = "Señal mezclada 3", xlab = "Tiempo", ylab = "Amplitud")
+
+par(mfrow = c(1, 1))
+```
+
+##### Explicación del proceso de ICA
+
+En este paso se generaron tres señales fuente con formas de onda distintas y no gaussianas, condición necesaria para que ICA funcione correctamente. Las señales se mezclaron linealmente con la matriz $A$, simulando el escenario de separación ciega de fuentes.
+
+El algoritmo fastICA busca una matriz de desmezclado $W$ tal que $\hat{S} = XW$ maximice la no-gaussianidad de las componentes resultantes. Para ello utiliza la aproximación de negentropía con la función de contraste `logcosh`, que es más robusta frente a valores atípicos que la curtosis (Hyvärinen et al., 2001).
+
+```{r}
+set.seed(123)
+
+# Aplicamos ICA con fastICA
+ica_result <- fastICA(X, n.comp = 3, alg.typ = "parallel", fun = "logcosh", maxit = 200)
+
+# Señales recuperadas
+S_recovered <- ica_result$S
+
+head(S_recovered)
+```
+
+```{r}
+# Visualización: señales originales vs señales recuperadas
+par(mfrow = c(3, 2))
+
+plot(t_seq, S[,1], type = "l", col = "steelblue",
+     main = "Original 1 (Senoidal)", xlab = "Tiempo", ylab = "Amplitud")
+plot(t_seq, S_recovered[,1], type = "l", col = "darkgreen",
+     main = "Recuperada 1", xlab = "Tiempo", ylab = "Amplitud")
+
+plot(t_seq, S[,2], type = "l", col = "steelblue",
+     main = "Original 2 (Diente de sierra)", xlab = "Tiempo", ylab = "Amplitud")
+plot(t_seq, S_recovered[,2], type = "l", col = "darkgreen",
+     main = "Recuperada 2", xlab = "Tiempo", ylab = "Amplitud")
+
+plot(t_seq, S[,3], type = "l", col = "steelblue",
+     main = "Original 3 (Cuadrada)", xlab = "Tiempo", ylab = "Amplitud")
+plot(t_seq, S_recovered[,3], type = "l", col = "darkgreen",
+     main = "Recuperada 3", xlab = "Tiempo", ylab = "Amplitud")
+
+par(mfrow = c(1, 1))
+```
+
 #### c. Análisis e interpretación de resultados
+
+##### Interpretación de las señales recuperadas por ICA
+
+Las gráficas muestran la comparación entre las señales originales y las señales recuperadas por fastICA.
+
+El algoritmo logró recuperar correctamente la forma de onda de las tres señales independientes a partir de sus mezclas. Las componentes recuperadas preservan la estructura esencial de las originales: la forma senoidal, el patrón lineal del diente de sierra y la señal binaria cuadrada son reconocibles en las señales recuperadas.
+
+Es importante notar que ICA tiene ambigüedades inherentes: no puede garantizar el orden ni el signo exacto de las componentes recuperadas. Por eso, las señales pueden aparecer en distinto orden o con signo invertido respecto a las originales (Hyvärinen et al., 2001). Sin embargo, la forma de onda esencial se conserva.
+
+A diferencia de PCA, que sólo decorrelaciona las señales sin recuperar su estructura temporal original, ICA aprovechó la no-gaussianidad para lograr una separación estadísticamente independiente.
 
 ---
 
@@ -518,28 +811,116 @@ ICA se utiliza en análisis de señales cerebrales (EEG y MEG) para separar señ
 
 ## 3.1 Comparación entre algoritmos
 
+La siguiente tabla resume las principales características de los cuatro algoritmos estudiados:
+
+| Característica | SVD | t-SNE | UMAP | ICA |
+|---|---|---|---|---|
+| Tipo | Lineal | No lineal | No lineal | Lineal |
+| Objetivo principal | Factorización / reducción de dimensionalidad | Visualización 2D/3D | Reducción y visualización | Separación ciega de fuentes |
+| Preserva | Estructura global (varianza) | Estructura local (vecindades) | Estructura local y global | Independencia estadística |
+| Determinista | Sí | No | No | No |
+| Supuesto principal | Ninguno (toda matriz real tiene SVD) | Similitudes locales modelables como gaussianas | Datos sobre variedad Riemanniana | Señales independientes y no gaussianas |
+| Generaliza a datos nuevos | Sí | No | Parcialmente | No directamente |
+| Costo computacional | Medio | Alto (O(n²)) | Medio-alto | Medio |
+| Interpretabilidad | Alta (valores singulares) | Baja (ejes sin significado) | Baja (ejes sin significado) | Media (componentes independientes) |
+| Dataset utilizado | MovieLens (ratings) | Breast Cancer Wisconsin | Breast Cancer Wisconsin | Señales sintéticas |
+
+---
+
 ## 3.2 Ventajas y limitaciones
+
+### SVD
+
+Ventajas:
+
+- Aplicable a cualquier matriz real, sin restricciones sobre su forma o propiedades.
+- Permite reducir dimensionalidad de manera exacta y controlada.
+- Los valores singulares tienen interpretación directa: representan la importancia de cada componente.
+- Es determinista y completamente reproducible.
+
+Limitaciones:
+
+- Es una técnica lineal: no captura relaciones no lineales entre variables.
+- La interpretación de los vectores singulares puede ser difícil en contextos prácticos.
+- La SVD completa es costosa en matrices muy grandes (aunque la SVD truncada mitiga esto).
+
+---
+
+### t-SNE
+
+Ventajas:
+
+- Produce visualizaciones de alta calidad que preservan la estructura local de los datos.
+- Muy efectivo para identificar agrupaciones o clústeres en datos complejos.
+- Maneja bien la no linealidad de los datos.
+
+Limitaciones:
+
+- No permite proyectar nuevas observaciones sin reentrenar el modelo.
+- Es estocástico: resultados distintos en cada ejecución.
+- Las distancias entre grupos en la proyección no son directamente interpretables.
+- Computacionalmente costoso para datasets grandes.
+- Los resultados son muy sensibles al valor de la perplejidad.
+
+---
+
+### UMAP
+
+Ventajas:
+
+- Más rápido que t-SNE, especialmente en datasets grandes.
+- Preserva mejor la estructura global de los datos además de la local.
+- Permite proyectar nuevas observaciones a diferencia de t-SNE.
+- Bases teóricas sólidas en geometría diferencial y topología algebraica.
+
+Limitaciones:
+
+- También es estocástico, aunque con mayor estabilidad que t-SNE.
+- La interpretación de los ejes es igualmente limitada.
+- Los resultados dependen de los valores de `n_neighbors` y `min_dist`.
+
+---
+
+### ICA
+
+Ventajas:
+
+- Puede recuperar señales originales mezcladas, lo que lo hace único entre los cuatro algoritmos.
+- Aprovecha información de orden superior (no-gaussianidad), lo que permite separar fuentes que PCA no podría.
+- Muy efectivo en procesamiento de señales biomédicas (EEG, ECG).
+
+Limitaciones:
+
+- Requiere que las señales fuente sean estadísticamente independientes y no gaussianas.
+- No puede determinar el orden ni el signo exacto de las componentes recuperadas.
+- Asume generalmente que el número de fuentes iguala al número de señales observadas.
+- Es sensible al ruido en los datos.
 
 ---
 
 # 4. Conclusiones
 
-- En la aplicación de SVD al dataset MovieLens se logró reducir la matriz usuario–película a un conjunto pequeño de factores latentes que conservan la estructura principal de los datos. Además evidenciamos que las preferencias de los usuarios se distribuyen en varios factores, lo que refleja la complejidad del comportamiento de calificación. Además, la proyección en dos dimensiones permitió visualizar diferencias entre usuarios y posibles patrones ocultos.  
+SVD: La aplicación de SVD al dataset MovieLens permitió reducir la matriz usuario–película de alta dimensión a 20 factores latentes que conservan la estructura principal de los datos. La distribución uniforme de la varianza explicada entre los factores (entre 5% y 6% cada uno) confirma que las preferencias de los usuarios son multidimensionales y no están dominadas por un único patrón. La proyección en dos dimensiones reveló diferencias entre usuarios y permitió identificar posibles patrones ocultos de comportamiento, validando la utilidad de SVD como herramienta de factorización en sistemas de recomendación.
+
+t-SNE: La proyección t-SNE del dataset Breast Cancer Wisconsin produjo una separación clara y compacta entre tumores malignos y benignos en el espacio bidimensional. Esto es coherente con la naturaleza del dataset: las 30 características morfológicas contienen suficiente información discriminativa para que el algoritmo identifique dos agrupaciones bien diferenciadas. La preservación de la estructura local de t-SNE resultó efectiva para este problema de clasificación binaria, aunque se confirma que las distancias entre los grupos en la proyección no deben interpretarse en términos absolutos.
+
+UMAP: UMAP también logró separar claramente los dos grupos diagnósticos del mismo dataset, con resultados similares a t-SNE pero con mayor estabilidad entre ejecuciones. La separación obtenida es consistente con la estructura del dataset y con los resultados de t-SNE, lo que refuerza la validez de ambas proyecciones. UMAP resultó más rápido computacionalmente y preservó mejor la estructura global, lo que lo hace más adecuado para tareas donde se requiere coherencia entre grupos distantes.
+
+ICA: fastICA recuperó exitosamente las tres señales fuente independientes (senoidal, diente de sierra y cuadrada) a partir de sus mezclas lineales. Las formas de onda recuperadas son reconocibles y consistentes con las señales originales, lo que valida la capacidad de ICA para resolver el problema de separación ciega de fuentes. Se observaron las ambigüedades inherentes del algoritmo: las componentes aparecen en distinto orden y con posible inversión de signo, pero la estructura temporal esencial se conserva en todos los casos.
 
 ## 4.1 Principales aprendizajes
 
-En general, aprendimos que no existe un algoritmo “mejor” en todos los casos, sino que la elección depende del tipo de datos, del objetivo del análisis y del contexto del problema.  
+Aprendimos que no existe un algoritmo universal: SVD es ideal para factorizar matrices dispersas como ratings; t-SNE y UMAP son complementarios para visualización (local vs. local+global); e ICA resuelve un problema fundamentalmente distinto, la separación de fuentes, que los demás no pueden abordar. La elección del algoritmo depende del tipo de datos, el objetivo del análisis y las restricciones computacionales.
 
 ## 4.2 Dificultades encontradas
 
-Una de las principales dificultades fue comprender las diferencias conceptuales entre métodos que, a primera vista, parecen similares. Por ejemplo, diferenciar claramente entre incorrelación (PCA) e independencia estadística (ICA) requirió revisar varias veces la teoría.  
-
+Una de las principales dificultades fue comprender las diferencias conceptuales entre métodos que, a primera vista, parecen similares. Diferenciar incorrelación (PCA) de independencia estadística (ICA) requirió revisar la teoría varias veces. También fue difícil interpretar las proyecciones de t-SNE y UMAP sin caer en el error de leer las distancias entre grupos como absolutas. En la parte práctica, la ausencia de datasets biomédicos locales para ICA llevó a trabajar con señales sintéticas, lo que igualmente permitió ilustrar el algoritmo de forma clara.
 
 ## 4.3 Reflexión final del grupo
 
-Este trabajo nos permitió encontrar una relación entre teoría matemática con aplicaciones reales en minería de datos. Pudimos ver cómo conceptos como independencia, no-gaussianidad, reducción de dimensionalidad y separación de señales tienen impacto directo en problemas prácticos.
+Este trabajo nos permitió conectar la teoría matemática con aplicaciones reales en minería de datos. Vimos cómo conceptos como independencia estadística, no-gaussianidad, reducción de dimensionalidad y separación de señales tienen impacto directo en problemas concretos: desde sistemas de recomendación hasta diagnóstico médico y procesamiento de señales.
 
-Además, entendimos que el aprendizaje no supervisado es una herramienta muy poderosa cuando no se dispone de etiquetas, pero también requiere mayor criterio para interpretar resultados.
+Entendimos que el aprendizaje no supervisado es una herramienta poderosa cuando no se dispone de etiquetas, pero exige mayor criterio para interpretar resultados. La comparación directa entre t-SNE y UMAP sobre el mismo dataset fue especialmente valiosa para comprender sus diferencias en la práctica.
 
 
 ---
@@ -566,7 +947,20 @@ Jolliffe, Ian T. *Principal component analysis: a beginner's guide—I. Introduc
 
 Tema 3: Análisis de Componentes Independientes (ICA). (2006).
 
+van der Maaten, L., & Hinton, G. (2008). *Visualizing high-dimensional data using t-SNE*. Journal of Machine Learning Research, 9, 2579–2605.
+
 ---
 
 # 6. Código fuente utilizado
 
+Todo el código fuente utilizado en este informe se encuentra integrado directamente en el documento R Markdown (`TAREA2.Rmd`), donde cada bloque de código está debidamente comentado. A continuación se resume el contenido de cada sección:
+
+- SVD (Sección 2.1.3): Utiliza las librerías `dplyr`, `Matrix` e `irlba` para construir una matriz dispersa usuario–película y aplicar SVD truncada con $k = 20$ factores latentes sobre el dataset MovieLens.
+
+- t-SNE (Sección 2.2.3): Utiliza las librerías `Rtsne` y `ggplot2` para proyectar el dataset Breast Cancer Wisconsin en dos dimensiones mediante t-SNE, con perplejidad 30 y 1000 iteraciones.
+
+- UMAP (Sección 2.3.3): Utiliza las librerías `umap` y `ggplot2` para proyectar el mismo dataset con parámetros `n_neighbors = 15` y `min_dist = 0.1`.
+
+- ICA (Sección 2.4.3): Utiliza la librería `fastICA` para separar tres señales sintéticas mezcladas (senoidal, diente de sierra y cuadrada) usando el algoritmo paralelo con función de contraste `logcosh`.
+
+Para reproducir los resultados, se requiere R versión 4.0 o superior con las siguientes librerías instaladas: `dplyr`, `Matrix`, `irlba`, `Rtsne`, `ggplot2`, `umap`, `fastICA`.
