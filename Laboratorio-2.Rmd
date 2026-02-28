@@ -10,6 +10,8 @@ output:
     highlight: tango
 ---
 
+<!-- Enlace al repositorio: https://github.com/Jonialen/lab1DataMining -->
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(tidyverse)
@@ -86,10 +88,7 @@ print(hop)
 
 **Interpretación:**
 
-- Valores cercanos a **0.5** → datos distribuidos aleatoriamente (sin tendencia a cluster)
-- Valores cercanos a **1** → fuerte tendencia al agrupamiento
-
-El estadístico obtenido indica la distribución de los datos. Dado que el dataset incluye muchas películas sin datos financieros registrados (budget = 0, revenue = 0), la variabilidad está concentrada en un subconjunto pequeño de películas, lo que puede dificultar la separación de grupos. Se continúa el análisis con fines analíticos.
+El coeficiente de Hopkins es un valor muy cercano a 0, lo que indica que los datos estan distribuidos muy uniformemente, lo que indica que los datos no tienen tendencia a realizar clusters. Dado que el dataset incluye muchas películas sin datos financieros registrados (budget = 0, revenue = 0), la variabilidad está concentrada en un subconjunto pequeño de películas, lo que puede dificultar la separación de grupos. Se continúa el análisis con fines analíticos.
 
 ### 1.2.2 VAT (Visual Assessment of Cluster Tendency)
 
@@ -99,7 +98,7 @@ fviz_dist(dist(muestra), show_labels = FALSE)
 
 **Interpretación:**
 
-La gráfica VAT se realizó con una muestra de 1,000 observaciones. Los bloques oscuros en la diagonal de la matriz de distancias indican presencia de grupos; mientras más definidos sean, mayor es la tendencia al clustering. Si la matriz luce uniforme, los grupos no están bien separados. Este resultado es coherente con el estadístico de Hopkins.
+La gráfica VAT se realizó con una muestra de 1,000 observaciones. Los bloques oscuros en la diagonal de la matriz de distancias indican presencia de grupos; se pueden observar ligeramente unos rectangulos naranjas en la diagonal, con una intensidad muy leve. Esto indica una separación muy baja entre los clusters formados
 
 ---
 
@@ -117,7 +116,7 @@ fviz_nbclust(muestra, kmeans, method = "wss")
 fviz_nbclust(muestra, kmeans, method = "silhouette")
 ```
 
-**Criterio:** Se selecciona **k = 3** como número de grupos, punto donde la reducción de la WSS se estabiliza y el índice de silueta muestra un valor aceptable. Este número también resulta interpretable en términos de negocio (películas independientes, de presupuesto medio, y blockbusters).
+**Criterio:** A pesar de que las gráficas muestran que el número óptimo de clusters es 5, al implementar el algoritmo con dicha cantidad de clusters, se observa que algunos clusters presentan tamaños muy reducidos y características poco diferenciadas. Por esta razón se selecciona **k = 3** como número de clusters.
 
 ```{r k_num}
 k_num <- 3
@@ -185,7 +184,7 @@ tab_comp     <- table(Kmeans = kmeans_on_hc, Jerarquico = hc_clusters)
 kable(tab_comp, caption = "Tabla de contingencia: K-means vs. Jerárquico (muestra hc)")
 ```
 
-**Interpretación:** La diagonal de la tabla de contingencia muestra la concordancia entre ambos métodos. Valores altos en la diagonal indican que ambos algoritmos asignan las películas al mismo cluster, lo que valida la robustez de la estructura encontrada. Las discrepancias menores se explican por las diferencias algorítmicas entre k-means (minimiza varianza interna) y Ward (minimiza aumento de inercia al fusionar).
+**Interpretación:** La tabla de contingencia muestra una alta correspondencia entre el cluster 3 del método K-means y el cluster 1 del método jerárquico, Existe un cluster diferenciado entre los datos. A pesar de esto, los otros clusters tienen un alto traslape, indicando clusters menos definidos.
 
 ---
 
@@ -216,13 +215,11 @@ cat("Índice de silueta promedio (Jerárquico):", round(mean(sil_hc[, 3]), 4))
 
 **Interpretación del índice de silueta:**
 
-| Rango | Interpretación |
-|---|---|
-| > 0.5 | Buena estructura de clustering |
-| 0.3 – 0.5 | Estructura aceptable |
-| < 0.25 | Estructura débil |
+Para el método de k-means, el cluster 3 esta muy bien definido y tiene una clara separación con respecto a los demás clusters, los clusters 1 y 2 son mas débiles que el anterior. El promedio general es de 0.5678, lo que indica una buena estructura de clustering general.
 
-Se selecciona el método con mayor índice promedio de silueta para la interpretación final. En la mayoría de datasets financieros con alta asimetría (como este, donde la mayoría de películas tienen budget = 0), valores entre 0.2 y 0.4 son esperables y aceptables.
+Para el método de k-means, el cluster 1 esta muy bien definido y tiene una clara separación con respecto a los demás clusters, los clusters 2 y 3 son mas débiles que el anterior, En particular el cluster 3, el cual tiene únicamente 4 observaciones. El promedio general es de 0.6405, lo que indica una buena estructura de clustering general.
+
+Se puede observar un desbalance significativo en el tamaño de los clusters jerárquicos, incluyendo un grupo extremadamente pequeño, lo que podría indicar presencia de valores atípicos. 
 
 ---
 
@@ -280,9 +277,11 @@ ggplot(df_long, aes(x = cluster, y = valor, fill = cluster)) +
 
 **Interpretación de los clusters:**
 
-- **Cluster 1 – Producciones independientes o sin datos financieros:** Concentra la mayoría de las películas. Mediana de presupuesto e ingresos cercana a 0, popularidad baja. Corresponde a producciones regionales, de bajo perfil o con datos financieros no registrados.
-- **Cluster 2 – Producciones de alcance medio:** Presupuesto e ingresos moderados. Calificaciones promedio aceptables y mayor número de votos que el Cluster 1, indicando mayor exposición a audiencias.
-- **Cluster 3 – Blockbusters:** Alto presupuesto, altos ingresos, alta popularidad y mayor número de votos. Representan las grandes producciones cinematográficas con amplio alcance global.
+- **Cluster 1** contiene producciones de alto presupuesto y alta recaudación, con alta popularidad y varios votos, lo que sugiere que corresponde a películas comerciales como blockbusters.
+
+- **Cluster 2** tiene películas con bajo presupuesto y baja recaudación, pero con mejores calificaciones, lo que sugiere que corresponde a peliculas independientes.
+
+- **Cluster 3** tiene 0, o valores muy cercanos a 0 en todos los registros, lo que puede sugerir registros con información incompleta.
 
 ### 1.6.2 Tablas de frecuencia por cluster
 
@@ -317,6 +316,14 @@ ggplot(top_generos, aes(x = reorder(Genero, Frecuencia),
   theme_minimal()
 ```
 
+**Interpretación de los clusters:**
+
+ - **Cluster 1** esta dominado principalmente por Acción y Aventura, lo que son géneros característicos de cine comercial
+ 
+ - **Cluster 2** presenta un dominio de Drama y Comedia, que pueden ser géneros de cine independiente.
+ 
+ - **Cluster 3** presenta principalmente géneros de Drama y Documentales, lo que puede indicar que se trata de producciones mas cortas y que no recaudan ni reciben calificaciones altas, como documentales.
+
 #### Idioma original por cluster
 
 ```{r idioma_cluster}
@@ -329,6 +336,31 @@ idioma_por_cluster <- df_clean %>%
 kable(idioma_por_cluster,
       caption = "Top 5 idiomas originales por cluster")
 ```
+
+
+```{r}
+ggplot(idioma_por_cluster, 
+       aes(x = reorder(Idioma, Frecuencia),
+           y = Frecuencia, 
+           fill = factor(cluster))) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~paste("Cluster", cluster), scales = "free") +
+  scale_fill_brewer(palette = "Set1") +
+  labs(title = "Top 5 idiomas originales por cluster",
+       x = "Idioma",
+       y = "Frecuencia") +
+  theme_minimal()
+```
+
+
+**Interpretación de los clusters:**
+
+ - **Cluster 1** esta dominado casi totalmente por el ingles, lo que confirma el supuesto de peliculas comerciales.
+ 
+ - **Cluster 2**, aunque todavía domina el ingles, se puede ver mayor distribución de otros idiomas, principalmente el japones y otros como el español, frances y portugues.
+ 
+ - **Cluster 3**, de igual forma domina el ingles pero hay una proporción mucho mayor de otros idiomas, nuevamente como el español, frances y portugues, seguido de el alemán. 
 
 #### Rango temporal por cluster
 
@@ -343,11 +375,20 @@ df_clean %>%
   kable(caption = "Rango de años de lanzamiento por cluster")
 ```
 
+
+**Interpretación de los clusters:**
+
+ - **Cluster 1** El registro comienza en 1975 y termina en 2025, con mediana en 2012, lo que muestra que la mayoría de cine comercial esta sesgado en el siglo XXI.
+ 
+ - **Cluster 2** El registro comienza en 1931 y termina en 2026, con mediana en 2018, aqui se encuentra casi todo el registr histórico de los datos. A pesar de esto, la mediana de 2018 indica que, a pesar de tener peliculas antiguas, hay una gran cantidad de peliculas muy recientes.
+ 
+ - **Cluster 3** El registro comienza en 2008 y termina en 2026, con mediana en 2025, a pesar de que todo este cluster es de los ultimos años. La mitad de los datos son del último año en adelante, lo que indica una gran cantidad de contenido producido en los últimos años. Lo que conincide con lo especulado de documentales y otras producciones similares.
+
 ### 1.6.3 Hallazgos interesantes
 
-1. **Drama y Comedia dominan en todos los clusters**, pero su proporción relativa varía: en los blockbusters (Cluster 3) compiten con Acción y Aventura.
-2. **El inglés predomina en el Cluster 3** (blockbusters), mientras que el Cluster 1 exhibe la mayor diversidad de idiomas, revelando un mercado internacional subestimado.
-3. **Las películas mejor calificadas no pertenecen necesariamente al Cluster 3:** el Cluster 2 suele presentar calificaciones promedio más altas por voto, lo que sugiere que el presupuesto no garantiza calidad percibida.
+1. **Drama y Comedia dominan en todos los clusters**, pero su proporción relativa varía: en los blockbusters (Cluster 1) compiten con Acción y Aventura.
+2. **El inglés predomina en el Cluster 1** (blockbusters), mientras que el Cluster 3 exhibe la mayor diversidad de idiomas, revelando un mercado internacional subestimado.
+3. **Las películas mejor calificadas no pertenecen necesariamente al Cluster 1:** el Cluster 2 suele presentar calificaciones promedio más altas por voto, lo que sugiere que el presupuesto no garantiza calidad percibida.
 4. **El tamaño desbalanceado** de los clusters refleja la realidad del mercado: la gran mayoría son producciones pequeñas, con un pequeño núcleo de blockbusters que concentran la mayor popularidad.
 
 ### 1.6.4 Aplicaciones prácticas
@@ -516,13 +557,17 @@ plot(rules_top15,
 
 **Interpretación de las reglas más interesantes:**
 
-1. **Presupuesto alto → Ingresos altos:** Las películas con mayor inversión tienden a generar mayores ingresos, confirmando la lógica del mercado de blockbusters.
-2. **Géneros Acción/Aventura + presupuesto alto → popularidad alta:** Los géneros más comerciales refuerzan la popularidad cuando van acompañados de alta inversión.
-3. **Sin calificación + sin ingresos → presupuesto nulo:** Las películas sin datos financieros tampoco cuentan con retroalimentación de audiencia, formando un cluster de datos incompletos.
-4. **Drama + duración larga → calificación media-alta:** Las producciones dramáticas de mayor duración reciben calificaciones más altas, sugiriendo que la audiencia valora la profundidad narrativa.
-5. **Popularidad baja + ingresos nulos → sin calificación:** Las películas que no llegaron a la audiencia tampoco fueron calificadas, creando un ciclo de baja visibilidad.
+1. **Ingresos altos → Popularidad alta:** Las películas con ingresos altos presentan consistentemente alta popularidad (confidence = 1.00), lo que evidencia una relación directa entre éxito comercial y visibilidad ante la audiencia.
 
-Estas reglas revelan oportunidades: **producciones dramáticas con presupuesto medio** pueden capturar calificaciones altas sin requerir la inversión de un blockbuster.
+2. **Ingresos medios → Popularidad alta:** Incluso cuando los ingresos no son máximos, sino intermedios, la probabilidad de alcanzar alta popularidad sigue siendo muy elevada (confidence ≈ 0.97), lo que sugiere que el desempeño comercial está fuertemente ligado a la exposición pública.
+
+3. **Presupuesto medio → Popularidad alta:** Las producciones con presupuesto medio tienden a alcanzar alta popularidad (confidence ≈ 0.96). Esto indica que no es imprescindible una inversión extremadamente alta para lograr visibilidad significativa en el mercado.
+
+4. **Calificación media ↔ Popularidad alta:** Existe una relación bidireccional entre calificación media y popularidad alta. Las películas populares suelen concentrarse en valoraciones medias, y aquellas con calificación media tienen alta probabilidad de ser populares, reflejando una aceptación amplia del público general.
+
+5. **Drama + popularidad alta → película larga:** Cuando una película del género Drama alcanza alta popularidad, tiende además a ser de larga duración, lo que sugiere que las producciones dramáticas exitosas suelen desarrollar narrativas más extensas.
+
+Estas reglas muestran que la variable central en la estructura del dataset es la popularidad, fuertemente asociada con ingresos, presupuesto medio y duración, más que exclusivamente con presupuestos extremadamente altos.
 
 ---
 
@@ -584,6 +629,10 @@ print(kmo_result)
 | 0.5 – 0.6 | Miserable |
 | < 0.5 | Inaceptable (no apto para PCA) |
 
+El índice Kaiser-Meyer-Olkin (KMO) global obtuvo un valor de 0.84, lo que indica una muy buena adecuación factorial y confirma la idoneidad del dataset para aplicar Análisis de Componentes Principales.
+
+La mayoría de las variables presentan valores MSA superiores a 0.80, evidenciando una adecuada varianza compartida. Sin embargo, la variable castMenAmount obtuvo un MSA de 0.48, por debajo del umbral recomendado.
+
 ### Test de Esfericidad de Bartlett
 
 ```{r bartlett}
@@ -592,7 +641,7 @@ cat("Chi-cuadrado:", round(bartlett_result$chisq, 2),
     "\np-valor:", bartlett_result$p.value)
 ```
 
-**Interpretación:** Un p-valor < 0.05 permite rechazar H₀ (la matriz de correlaciones es la identidad), confirmando que existen correlaciones significativas entre variables y que el PCA es estadísticamente apropiado.
+**Interpretación:** Un p-valor < 0.05 permite rechazar H₀, confirmando que existen correlaciones significativas entre variables y que el PCA es estadísticamente apropiado.
 
 ## 3.3 Aplicación de PCA
 
@@ -667,13 +716,13 @@ ggplot(pca_plot_df, aes(PC1, PC2, color = cluster)) +
 
 ## 3.4 Interpretación de componentes
 
-**PC1 – Escala comercial:** `budget`, `revenue` y `voteCount` tienen las cargas más altas. Este componente resume el tamaño y alcance comercial de la película. Valores altos en PC1 corresponden a los blockbusters del Cluster 3.
+**PC1 – Escala estructural y tamaño de producción:** `actorsAmount`, `castWomenAmount`, `voteCount`, `budget` y `revenue` presentan las cargas más altas en este componente. PC1 resume el tamaño general de la producción, combinando magnitud del elenco, nivel de inversión y alcance en términos de votos. Valores altos en PC1 corresponden a producciones grandes, con amplio reparto y fuerte presencia comercial.
 
-**PC2 – Elenco y complejidad de producción:** Variables como `actorsAmount`, `castWomenAmount`, `castMenAmount` y `productionCoAmount` definen este componente. Captura la complejidad organizacional del proyecto, independientemente de su presupuesto.
+**PC2 – Internacionalización y composición del elenco:** `productionCountriesAmount` y `castMenAmount` son las variables con mayor peso en este componente, seguidas por contribuciones moderadas de `productionCoAmount` y `runtime`. PC2 captura la dimensión internacional y organizacional del proyecto, reflejando el grado de coproducción entre países y ciertas características estructurales del elenco, más que el presupuesto directamente.
 
-**PC3 – Calidad y diversidad narrativa:** `voteAvg`, `genresAmount` y `popularity` contribuyen a este componente, reflejando la percepción de calidad y el alcance de la audiencia en relación al tamaño del elenco.
+**PC3 – Estructura del reparto y alcance internacional:** `castMenAmount` y `productionCountriesAmount` tienen las cargas más altas en este componente, acompañadas por contribuciones moderadas de `revenue`, `budget` y `voteCount`. PC3 parece reflejar una dimensión asociada a la configuración del reparto y la proyección internacional de la película, más que a la calidad percibida directamente, ya que `voteAvg` y `genresAmount` presentan cargas moderadas y negativas.
 
-Este análisis revela que el **éxito comercial** (PC1) y la **calidad percibida** (PC3) son dimensiones relativamente independientes, lo que abre la puerta a estrategias de producción eficientes.
+Este análisis muestra que las dimensiones principales no separan claramente “éxito comercial” y “calidad percibida”, sino que los primeros componentes están dominados por variables estructurales relacionadas con el tamaño del elenco, la escala de producción y el alcance internacional de las películas.
 
 ---
 
@@ -681,17 +730,7 @@ Este análisis revela que el **éxito comercial** (PC1) y la **calidad percibida
 
 ## 4.1 Justificación de la selección
 
-Se seleccionó **UMAP (Uniform Manifold Approximation and Projection)** entre las alternativas disponibles (SVD, t-SNE, ICA) por las siguientes razones:
-
-| Criterio | UMAP | t-SNE |
-|---|---|---|
-| Complejidad computacional | O(n log n) | O(n²) |
-| Preserva estructura global | Sí | Parcialmente |
-| Escalabilidad con 19k+ filas | Alta | Baja |
-| Integración con clustering | Directa | Directa |
-| Parámetros intuitivos | `n_neighbors`, `min_dist` | `perplexity` |
-
-Con ~19,000 películas, **t-SNE requeriría horas de cómputo** y el resultado sería difícil de interpretar globalmente. UMAP completa el proceso en minutos y preserva tanto vecindades locales como estructura global, siendo ideal para validar visualmente los clusters obtenidos.
+Se seleccionó **UMAP (Uniform Manifold Approximation and Projection)** entre las alternativas disponibles (SVD, t-SNE, ICA) debido a la complejidad de los algoritmos, en lo que las alternativas tomarían varias horas en completarlo. UMAP es mucho mas rápido y preserva tanto vecindades locales como estructura global, siendo ideal para validar visualmente los clusters obtenidos.
 
 ## 4.2 Aplicación e interpretación
 
@@ -752,11 +791,10 @@ ggplot(umap_df %>% filter(voteAvg > 0),
 
 **Interpretación:**
 
-- La proyección UMAP **valida visualmente la separación de los clusters** de K-means: los grupos identificados ocupan regiones diferenciadas del espacio 2D.
-- Se observa un **gradiente continuo** entre producciones pequeñas y blockbusters, coherente con el estadístico de Hopkins: no existe una separación abrupta, sino una transición gradual.
-- Las **regiones de mayor densidad** corresponden al Cluster 1 (películas sin datos financieros), que forma el "núcleo" de la nube de puntos.
-- Los **blockbusters del Cluster 3** aparecen como puntos periféricos o en subregiones claramente separadas, con mayor popularidad y calificaciones más altas.
-- La **calificación promedio** muestra patrones espaciales interesantes: las películas mejor calificadas no son necesariamente las más populares, confirmando que calidad y popularidad son dimensiones independientes.
+- La proyección UMAP valida visualmente la separación de los clusters de K-means: los grupos identificados ocupan regiones diferenciadas del espacio 2D.
+- Se observa un gradiente continuo entre producciones pequeñas y blockbusters, coherente con el estadístico de Hopkins: no existe una separación abrupta, sino una transición gradual.
+- Los blockbusters del Cluster 1 aparecen como puntos periféricos o en subregiones claramente separadas, con mayor popularidad y calificaciones más altas.
+- La calificación promedio muestra patrones espaciales interesantes: las películas mejor calificadas no son necesariamente las más populares, confirmando que calidad y popularidad son dimensiones independientes.
 
 ---
 
@@ -768,40 +806,48 @@ El análisis identificó **3 segmentos distintos** en el mercado cinematográfic
 
 | Cluster | Perfil | Características clave |
 |---|---|---|
-| 1 | Producciones independientes | Budget ≈ 0, revenue ≈ 0, diversidad de idiomas, alta frecuencia |
-| 2 | Cine de alcance medio | Presupuesto moderado, mejor relación calidad/inversión |
-| 3 | Blockbusters | Alto presupuesto, altos ingresos, alta popularidad, inglés dominante |
+| 1 | Producciones comerciales de gran escala | Alto presupuesto, altos ingresos, alta popularidad, inglés dominante |
+| 2 | Cine convencional de alcance medio | Presupuesto bajo/medio, diversidad moderada de idiomas y géneros |
+| 3 | Producciones recientes o de baja visibilidad | Presupuesto nulo o no reportado, ingresos nulos, baja popularidad, alta diversidad lingüística |
 
-La concordancia entre K-means y el clustering jerárquico confirma que esta segmentación es robusta.
+La comparación entre K-means y clustering jerárquico mostró concordancia parcial, con al menos un cluster altamente estable. Ambos métodos respaldan la existencia de una estructura segmentada clara, aunque con cierto solapamiento en los segmentos intermedios.
 
 ## 5.2 Conclusiones del PCA
 
-La reducción dimensional reveló que la variabilidad del dataset puede explicarse con pocos componentes:
+La reducción dimensional mostró que la variabilidad del dataset está dominada por factores estructurales de tamaño y escala de producción, más que por calidad percibida aislada.
 
-- **PC1 (Escala comercial):** Presupuesto, ingresos y audiencia son las variables más determinantes.
-- **PC2 (Complejidad de producción):** Tamaño del elenco y número de productoras.
-- **PC3 (Calidad percibida):** Calificación promedio y popularidad, independiente del presupuesto.
+ - **PC1 (Escala estructural de producción):** Está fuertemente asociado al tamaño del elenco, presupuesto, ingresos y cantidad de votos. Representa la magnitud general del proyecto.
 
-> El hallazgo más importante: **el éxito comercial y la calidad percibida son dimensiones independientes**, lo que permite diseñar estrategias eficientes sin necesidad de los presupuestos de un blockbuster.
+ - **PC2 (Internacionalización y estructura organizacional):** Dominado por el número de países de producción y la composición del elenco. Refleja la dimensión internacional más que el presupuesto directamente.
+
+ - **PC3 (Configuración estructural del reparto e inversión):** Asociado al tamaño del elenco masculino, coproducciones y variables financieras, sin evidenciar una dimensión pura de “calidad”.
+
+No se observa una separación clara entre éxito comercial y calidad percibida; ambas dimensiones están parcialmente relacionadas con variables estructurales de producción.
 
 ## 5.3 Reglas de Asociación más relevantes
 
-1. **Presupuesto alto + Acción/Aventura → Ingresos altos:** Confirma la fórmula blockbuster, pero con alta inversión requerida.
-2. **Drama + duración larga → Calificación alta:** Oportunidad de bajo costo con alta valoración de audiencia.
-3. **Popularidad media + calificación alta → presupuesto medio:** El nicho de mayor eficiencia para CineVision Studios.
+Las reglas obtenidas muestran patrones centrados principalmente en popularidad e ingresos, no en fórmulas directas de género o presupuesto alto.
+
+ - **Ingresos altos → Popularidad alta:** Todas las películas con ingresos altos presentan alta popularidad, evidenciando una fuerte relación entre éxito comercial y visibilidad.
+
+ - **Presupuesto medio → Popularidad alta:** Las producciones con inversión moderada tienen alta probabilidad de alcanzar visibilidad significativa.
+
+ - **Calificación media ↔ Popularidad alta:** Existe una relación bidireccional entre popularidad alta y calificación media, indicando que el mercado tiende a concentrarse en películas ampliamente aceptadas, más que en extremos de valoración.
+
+ - **Drama + popularidad alta → Película larga:** Las producciones dramáticas exitosas tienden a tener mayor duración.
 
 ## 5.4 Validación por UMAP
 
-UMAP confirmó que los clusters tienen separación espacial real en el espacio de alta dimensión, y que la calidad y la popularidad forman gradientes continuos que permiten optimización fina de portafolio.
+UMAP confirmó la existencia de estructura espacial coherente con los clusters identificados, mostrando gradientes continuos entre tamaño de producción, popularidad y alcance internacional. Sin embargo, no evidencia separaciones completamente independientes entre calidad y éxito comercial, sino transiciones graduales.
 
 ## 5.5 Recomendaciones estratégicas para CineVision Studios
 
-1. **Invertir en el Cluster 2 (mercado medio):** La mejor relación calidad/riesgo. Las reglas de asociación y el PCA coinciden en que este segmento es el más eficiente en retorno.
+1. **Invertir estratégicamente en producciones de escala media:** Las reglas muestran que presupuestos medios pueden lograr alta popularidad, representando una estrategia de menor riesgo que los blockbusters.
 
-2. **Explotar el mercado de Drama de larga duración:** Las reglas muestran que este perfil obtiene altas calificaciones con presupuestos accesibles. Un nicho subestimado por la competencia orientada a blockbusters.
+2. **Aprovechar la internacionalización como diferenciador:** El PCA indica que la coproducción internacional es una dimensión relevante. Expandir alianzas internacionales puede ampliar el alcance sin necesariamente aumentar drásticamente el presupuesto.
 
-3. **Diversificación de idiomas:** El Cluster 1 concentra producción en idiomas no ingleses con audiencias globales sin explotar. La inversión en distribución internacional puede capturar mercados emergentes.
+3. **No depender exclusivamente del alto presupuesto:** El clustering muestra que el segmento blockbuster es pequeño comparado con el resto del mercado.
 
-4. **No asumir que popularidad = calidad:** El PCA y UMAP muestran que son dimensiones independientes. Una estrategia de marketing focalizado puede convertir películas bien calificadas (pero poco populares) en éxitos de nicho.
+4. **Optimizar estructura de producción:** El PCA revela que el tamaño del elenco y la escala organizacional explican gran parte de la variabilidad. Producciones estructuralmente eficientes pueden competir sin necesidad de inversión extrema.
 
-5. **Optimizar tamaño de elenco y número de géneros:** El PCA (PC2) sugiere que la complejidad de producción no necesariamente correlaciona con mejores resultados. Producciones más enfocadas pueden ser más eficientes.
+5. **Identificar producciones recientes con bajo engagement:** El Cluster 3 concentra producciones recientes con baja popularidad. Existe oportunidad de reactivación mediante estrategias de marketing digital focalizado.
